@@ -1,5 +1,6 @@
-package com.example.prueba_1;
+package com.example.prueba_1.controllers;
 
+import com.example.prueba_1.clases.Alumno;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,8 +15,7 @@ import java.io.IOException;
 
 public class HelloController {
     // Valores del login
-    private static final String nombre_usuario = "alumno@gmail.com";
-    private static final String contrasenna = "123";
+    private final Alumno alumnoPrueba = new Alumno("Javier", "4-ESOB", "alumno@gmail.com", "123");
 
     // Elementos de la interfaz vinculados desde el FXML
     @FXML
@@ -42,8 +42,8 @@ public class HelloController {
         String usuarioIngresado = usuarioField.getText();
         String contrasennaIngresada = contrasennaField.getText();
 
-        if (nombre_usuario.equals(usuarioIngresado) && contrasenna.equals(contrasennaIngresada)) {
-            redirigirAlumno();
+        if (alumnoPrueba.getId_email_usuario().equals(usuarioIngresado) && alumnoPrueba.getContrasenna().equals(contrasennaIngresada)) {
+            redirigirAlumno(alumnoPrueba);
         } else {
             mensajeLabel.setText("Usuario o contraseña incorrectos.");
             mensajeLabel.setStyle("-fx-text-fill: red;");
@@ -51,11 +51,14 @@ public class HelloController {
     }
 
     // Método para cambiar a la vista de bienvenida
-    private void redirigirAlumno() {
+    private void redirigirAlumno(Alumno alumno) {
         try {
             // Cargar la nueva vista desde el archivo FXML
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("alumno-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/alumno-view.fxml"));
             Scene alumnoScene = new Scene(fxmlLoader.load());
+
+            AlumnoController controller = fxmlLoader.getController();
+            controller.mostrarDatosAlumno(alumno);
 
             // Obtener el Stage actual y reemplazar la escena
             Stage currentStage = (Stage) iniciarSesionButton.getScene().getWindow();

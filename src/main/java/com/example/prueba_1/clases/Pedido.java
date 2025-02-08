@@ -1,62 +1,76 @@
 package com.example.prueba_1.clases;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Pedido {
     //Atributos del pedido
-    private String id_alumno;
-    private String id_bocadillo;
-    private String precio_pagado;
-    private Date fecha;
-    private Date fecha_recogida;
+    private Alumno alumno;
+    private Bocadillo bocadillo;
+    private float precio_pagado;
+    private LocalDate fecha;
+    private LocalDate fecha_recogida;
 
     //Constructores
-    public Pedido(String id_alumno, String id_bocadillo, String precio_pagado, Date fecha, Date fecha_recogida) {
-        this.id_alumno = id_alumno;
-        this.id_bocadillo = id_bocadillo;
+    public Pedido(Alumno alumno, Bocadillo bocadillo, float precio_pagado, LocalDate fecha, LocalDate fecha_recogida) {
+        this.alumno = alumno;
+        this.bocadillo = bocadillo;
         this.precio_pagado = precio_pagado;
         this.fecha = fecha;
         this.fecha_recogida = fecha_recogida;
     }
 
     //Getters y Setters
-    public String getId_alumno() {
-        return id_alumno;
+
+
+    public Alumno getAlumno() {
+        return alumno;
     }
 
-    public void setId_alumno(String id_alumno) {
-        this.id_alumno = id_alumno;
+    public void setAlumno(Alumno alumno) {
+        this.alumno = alumno;
     }
 
-    public String getId_bocadillo() {
-        return id_bocadillo;
+    public Bocadillo getBocadillo() {
+        return bocadillo;
     }
 
-    public void setId_bocadillo(String id_bocadillo) {
-        this.id_bocadillo = id_bocadillo;
+    public void setBocadillo(Bocadillo bocadillo) {
+        this.bocadillo = bocadillo;
     }
 
-    public String getPrecio_pagado() {
+    public float getPrecio_pagado() {
         return precio_pagado;
     }
 
-    public void setPrecio_pagado(String precio_pagado) {
+    public void setPrecio_pagado(float precio_pagado) {
         this.precio_pagado = precio_pagado;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    public Date getFecha_recogida() {
+    public LocalDate getFecha_recogida() {
         return fecha_recogida;
     }
 
-    public void setFecha_recogida(Date fecha_recogida) {
+    public void setFecha_recogida(LocalDate fecha_recogida) {
         this.fecha_recogida = fecha_recogida;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "alumno=" + alumno +
+                ", bocadillo=" + bocadillo +
+                ", precio_pagado=" + precio_pagado +
+                ", fecha=" + fecha +
+                ", fecha_recogida=" + fecha_recogida +
+                '}';
     }
 }

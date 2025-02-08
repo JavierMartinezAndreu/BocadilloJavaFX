@@ -1,0 +1,36 @@
+/* Barra de navegación */
+.navbar {
+    background-color: #4CAF50; /* Mismo verde del header */
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
+
+/* Estilo para el Label */
+.seleccionado-mensaje {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #3e8e41;
+    font-size: 16px;
+}
+
+/* Estilo para el botón */
+.logout-btn {
+    background-color: #fff;
+    color: #4CAF50;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #4CAF50;
+    color: #fff;
+}

@@ -57,12 +57,17 @@ public class HelloController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/alumno-view.fxml"));
             Scene alumnoScene = new Scene(fxmlLoader.load());
 
+
             AlumnoController controller = fxmlLoader.getController();
-            controller.mostrarDatosAlumno(alumno);
+            controller.initialize(alumno);
 
             // Obtener el Stage actual y reemplazar la escena
             Stage currentStage = (Stage) iniciarSesionButton.getScene().getWindow();
             currentStage.setScene(alumnoScene);
+
+            // Configurar el Stage para que se vea en pantalla completa
+            currentStage.setFullScreen(true);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

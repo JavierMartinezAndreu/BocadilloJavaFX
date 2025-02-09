@@ -1,8 +1,8 @@
-package com.example.prueba_1.controllers;
+package com.example.prueba_1.controller;
 
-import com.example.prueba_1.clases.Alumno;
-import com.example.prueba_1.clases.Bocadillo;
-import com.example.prueba_1.clases.Pedido;
+import com.example.prueba_1.model.Alumno;
+import com.example.prueba_1.model.Bocadillo;
+import com.example.prueba_1.model.Pedido;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -16,7 +16,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,11 +41,11 @@ public class AlumnoController {
     // Método para inicializar el controlador
     @FXML
     public void initialize(Alumno alumno) {
-        botonCerrarSesion.setOnAction(event -> cerrarSesion());
+        /*botonCerrarSesion.setOnAction(event -> cerrarSesion());
         mostrarDatosAlumno(alumno);
         cargarBocadillos();
         cargarPedidos(alumno, lista_bocadillos);
-        mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);
+        mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);*/
     }
 
     public void mostrarDatosAlumno(Alumno alumno) {
@@ -53,7 +55,7 @@ public class AlumnoController {
     public void cerrarSesion(){
         try {
             // Cargar la nueva vista desde el archivo FXML
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/hello-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/fxml/hello-view.fxml"));
             Scene helloScene = new Scene(fxmlLoader.load());
 
             HelloController controller = fxmlLoader.getController();
@@ -66,7 +68,7 @@ public class AlumnoController {
         }
     }
 
-    public void cargarBocadillos(){
+    /*public void cargarBocadillos(){
         lista_bocadillos = new ArrayList<>();
 
 
@@ -95,7 +97,11 @@ public class AlumnoController {
     public void cargarPedidos(Alumno alumno, List<Bocadillo> lista_bocadillos){
         lista_pedidos = new ArrayList<>();
 
-        lista_pedidos.add(new Pedido(alumno, lista_bocadillos.get(0), lista_bocadillos.get(0).getPrecio(), LocalDate.of(2025,2,6), null));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2025, Calendar.FEBRUARY, 6); // Recuerda que los meses en Calendar son 0-indexados
+        Date date = calendar.getTime();
+
+        lista_pedidos.add(new Pedido(20L, alumno, lista_bocadillos.get(0), lista_bocadillos.get(0).getPrecio(), date, null));
         System.out.println(lista_pedidos.get(0).toString());
     }
 
@@ -174,7 +180,7 @@ public class AlumnoController {
         for (Pedido pedido : lista_pedidos) {
             if (pedido.getAlumno().equals(alumno) && pedido.getFecha().equals(LocalDate.now())) {
                 pedido.setBocadillo(bocadillo);
-                pedido.setPrecio_pagado(bocadillo.getPrecio());
+                pedido.setPrecio_pedido(bocadillo.getPrecio());
                 pedido_existente = true;
                 break;
             }
@@ -182,7 +188,10 @@ public class AlumnoController {
 
         if (!pedido_existente){
             // Si no existe el pedido, crear uno nuevo
-            Pedido nuevoPedido = new Pedido(alumno, bocadillo, bocadillo.getPrecio(), LocalDate.now(), null);
+            LocalDate localDateNow = LocalDate.now();
+            Date currentDate = Date.from(localDateNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            Pedido nuevoPedido = new Pedido(23L, alumno, bocadillo, bocadillo.getPrecio(), currentDate, null);
             lista_pedidos.add(nuevoPedido);
             System.out.println("Nuevo pedido creado: " + nuevoPedido);
         }
@@ -190,5 +199,5 @@ public class AlumnoController {
 
         // Luego de hacer el pedido, recargamos la lista de bocadillos
         mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);
-    }
+    }*/
 }

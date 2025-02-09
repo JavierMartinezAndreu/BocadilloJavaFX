@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="506.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba_1.controllers.AlumnoController">
+<BorderPane prefHeight="506.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba_1.controller.AlumnoController">
     <top>
         <HBox prefHeight="100.0" style="-fx-background-color: #4CAF50; -fx-padding: 20px 10px;">
             <children>

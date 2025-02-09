@@ -17,15 +17,16 @@ public class Alumno {
     private String nombre;
 
     @ManyToOne
-    @JoinColumn(name = "id_curso", nullable = false)
+    @JoinColumn(name = "id_curso")
     private Curso curso;
 
     @OneToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "alumno")
+    @OneToMany(mappedBy = "alumno", fetch = FetchType.EAGER)
     private List<Pedido> pedidos;
+
 
     public Alumno(Long id, String nombre, Curso curso, Usuario usuario, List<Pedido> pedidos) {
         this.id = id;
@@ -76,5 +77,10 @@ public class Alumno {
 
     public void setPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    @Override
+    public String toString() {
+        return "Alumno{" + "id=" + id + ", nombre='" + nombre + '\'' + ", curso=" + curso + ", usuario=" + usuario + ", pedidos=" + pedidos + '}';
     }
 }

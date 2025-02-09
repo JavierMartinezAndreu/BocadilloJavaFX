@@ -15,20 +15,13 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoUsuario tipo_usuario;
-
-    public enum TipoUsuario {
-        admin,
-        cocina,
-        alumnado
-    }
+    private String tipo_usuario;
 
     @Column
     private String auth_key;
 
-    public Usuario(Long id, String email, String password, TipoUsuario tipo_usuario, String auth_key) {
+    public Usuario(Long id, String email, String password, String tipo_usuario, String auth_key) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -63,11 +56,11 @@ public class Usuario {
         this.password = password;
     }
 
-    public TipoUsuario getTipo_usuario() {
+    public String getTipo_usuario() {
         return tipo_usuario;
     }
 
-    public void setTipo_usuario(TipoUsuario tipo_usuario) {
+    public void setTipo_usuario(String tipo_usuario) {
         this.tipo_usuario = tipo_usuario;
     }
 

@@ -12,6 +12,11 @@
 
         <!--<mapping resource="ejemplo01/Profesor.hbm.xml"/>-->
         <mapping class="com.example.prueba_1.model.Usuario"/>
+        <mapping class="com.example.prueba_1.model.Alumno"/>
+        <mapping class="com.example.prueba_1.model.Curso"/>
+        <mapping class="com.example.prueba_1.model.Pedido"/>
+        <mapping class="com.example.prueba_1.model.Bocadillo"/>
+        <mapping class="com.example.prueba_1.model.Alergeno"/>
 
     </session-factory>
 </hibernate-configuration>

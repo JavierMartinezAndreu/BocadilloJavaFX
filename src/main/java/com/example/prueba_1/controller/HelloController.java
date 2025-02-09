@@ -2,6 +2,7 @@ package com.example.prueba_1.controller;
 
 import com.example.prueba_1.model.Alumno;
 import com.example.prueba_1.model.Usuario;
+import com.example.prueba_1.service.AlumnoService;
 import com.example.prueba_1.service.UsuarioService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,28 +34,45 @@ public class HelloController {
     // Método para inicializar el controlador
     @FXML
     public void initialize() {
-        UsuarioService usuarioService = new UsuarioService();
+        /*UsuarioService usuarioService = new UsuarioService();
         List<Usuario> usuario = usuarioService.getAll();
         for(Usuario mi_usuario : usuario)
         {
-            //imprimimos el objeto pivote
-            System.out.println(mi_usuario.toString());
-        }
+            if (mi_usuario.getTipo_usuario().equals("alumnado")){
+                AlumnoService alumnoService = new AlumnoService();
+                Alumno alumno = alumnoService.obtenerAlumnoPorUsuario(mi_usuario);
+                System.out.println(alumno.toString());
+            }
+        }*/
 
         // Configuramos el botón para validar las credenciales al hacer clic
-        //iniciarSesionButton.setOnAction(event -> validarCredenciales());
+        iniciarSesionButton.setOnAction(event -> validarCredenciales());
     }
 
     // Método para validar las credenciales
-    /*private void validarCredenciales() {
+    private void validarCredenciales() {
         String usuarioIngresado = usuarioField.getText();
         String contrasennaIngresada = contrasennaField.getText();
 
-        if (alumnoPrueba.getId_email_usuario().equals(usuarioIngresado) && alumnoPrueba.getContrasenna().equals(contrasennaIngresada)) {
-            redirigirAlumno(alumnoPrueba);
-        } else {
-            mensajeLabel.setText("Usuario o contraseña incorrectos.");
-            mensajeLabel.setStyle("-fx-text-fill: red;");
+        //Inicializar el listado de usuarios
+        UsuarioService usuarioService = new UsuarioService();
+        List<Usuario> usuarios = usuarioService.getAll();
+
+        //Comprobar credenciales de los usuarios y su tipo
+        for (Usuario mi_usuario : usuarios){
+            if (mi_usuario.getEmail().equals(usuarioIngresado) && mi_usuario.getPassword().equals(contrasennaIngresada)){
+                //Comprobar si es de tipo alumno, y si existe, hacer login
+                if (mi_usuario.getTipo_usuario().equals("alumnado")){
+                    AlumnoService alumnoService = new AlumnoService();
+                    Alumno alumno = alumnoService.obtenerAlumnoPorUsuario(mi_usuario);
+                    if (alumno != null){
+                        redirigirAlumno(alumno);
+                    }
+                }
+            } else {
+                mensajeLabel.setText("Usuario o contraseña incorrectos.");
+                mensajeLabel.setStyle("-fx-text-fill: red;");
+            }
         }
     }
 
@@ -79,5 +97,5 @@ public class HelloController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

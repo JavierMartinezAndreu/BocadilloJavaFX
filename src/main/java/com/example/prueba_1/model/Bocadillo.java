@@ -47,6 +47,9 @@ public class Bocadillo {
         this.alergenos = alergenos;
     }
 
+    public Bocadillo() {
+    }
+
     public Long getId() {
         return id;
     }

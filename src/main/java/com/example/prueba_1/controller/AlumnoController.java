@@ -41,9 +41,9 @@ public class AlumnoController {
     // Método para inicializar el controlador
     @FXML
     public void initialize(Alumno alumno) {
-        /*botonCerrarSesion.setOnAction(event -> cerrarSesion());
+        botonCerrarSesion.setOnAction(event -> cerrarSesion());
         mostrarDatosAlumno(alumno);
-        cargarBocadillos();
+        /*cargarBocadillos();
         cargarPedidos(alumno, lista_bocadillos);
         mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);*/
     }

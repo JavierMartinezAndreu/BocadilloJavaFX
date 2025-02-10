@@ -1,9 +1,7 @@
 package com.example.prueba_1.service;
 
 import com.example.prueba_1.dao.AlumnoDAO;
-import com.example.prueba_1.model.Alumno;
-import com.example.prueba_1.model.Pedido;
-import com.example.prueba_1.model.Usuario;
+import com.example.prueba_1.model.*;
 
 import java.util.List;
 
@@ -36,5 +34,26 @@ public class AlumnoService {
         return null;
     }
 
+    public Alumno obtenerAlumnoPorId(Long id) {
+        List<Alumno> listado_alumnos = getAll();
+
+        for (Alumno alumno : listado_alumnos) {
+            if (alumno.getId().equals(id)) {
+                return alumno;
+            }
+        }
+
+        return null;
+    }
+
+
+    public List<Pedido> obtenerPedidosAlumno(Alumno alumno){
+        List<Pedido> pedidos = alumno.getPedidos();
+        if (pedidos.isEmpty()){
+            return null;
+        } else {
+            return pedidos;
+        }
+    }
 
 }

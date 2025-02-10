@@ -11,6 +11,7 @@ public class Pedido {
     //Atributos del pedido
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -27,8 +28,9 @@ public class Pedido {
     @Column(nullable = false)
     private Date fecha;
 
-    @Column(nullable = false)
+    @Column(name = "fecha_recogida", nullable = true)
     private Date fecha_recogida;
+
 
     public Pedido(Long id, Alumno alumno, Bocadillo bocadillo, double precio_pedido, Date fecha, Date fecha_recogida) {
         this.id = id;
@@ -88,17 +90,5 @@ public class Pedido {
 
     public void setFecha_recogida(Date fecha_recogida) {
         this.fecha_recogida = fecha_recogida;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "id=" + id +
-                ", alumno=" + alumno +
-                ", bocadillo=" + bocadillo +
-                ", precio_pedido=" + precio_pedido +
-                ", fecha=" + fecha +
-                ", fecha_recogida=" + fecha_recogida +
-                '}';
     }
 }

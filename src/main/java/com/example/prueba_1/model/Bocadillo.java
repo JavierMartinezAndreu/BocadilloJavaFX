@@ -29,11 +29,11 @@ public class Bocadillo {
     @Column(nullable = false)
     private String dia_semana;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "bocadillo_alergeno", // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "id_bocadillo"), // Columna que referencia a la tabla bocadillo
-            inverseJoinColumns = @JoinColumn(name = "id_alergeno") // Columna que referencia a la tabla alergeno
+            name = "bocadillo_alergeno",
+            joinColumns = @JoinColumn(name = "id_bocadillo"),
+            inverseJoinColumns = @JoinColumn(name = "id_alergeno")
     )
     private List<Alergeno> alergenos;
 
@@ -105,4 +105,5 @@ public class Bocadillo {
     public void setAlergenos(List<Alergeno> alergenos) {
         this.alergenos = alergenos;
     }
+
 }

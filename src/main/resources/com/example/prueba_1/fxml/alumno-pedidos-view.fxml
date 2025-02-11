@@ -5,22 +5,22 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="506.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba_1.controller.AlumnoController">
+<BorderPane prefHeight="506.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba_1.controller.AlumnoPedidosController">
     <top>
         <HBox prefHeight="100.0" style="-fx-background-color: #4CAF50; -fx-padding: 20px 10px;">
             <children>
-            <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../images/ç.png" />
-               </image>
-            </ImageView>
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../images/ç.png" />
+                    </image>
+                </ImageView>
                 <Label fx:id="mensajeBienvenidaLabel" style="-fx-font-size: 20px;" text="¡Bienvenido!" HBox.hgrow="NEVER">
                     <HBox.margin>
                         <Insets left="20.0" top="15.0" />
                     </HBox.margin>
                 </Label>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="botonHistorial" mnemonicParsing="false" text="Historial" HBox.hgrow="NEVER">
+                <Button fx:id="botonPedirBocadillo" mnemonicParsing="false" text="Pedir" HBox.hgrow="NEVER">
                     <HBox.margin>
                         <Insets right="20.0" top="15.0" />
                     </HBox.margin>
@@ -37,10 +37,10 @@
     <center>
         <VBox alignment="TOP_CENTER" fillWidth="false" style="-fx-padding: 20px;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
             <children>
-                <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-margin-bottom: 10px;" text="Pide tu bocadillo">
-               <VBox.margin>
-                  <Insets bottom="20.0" />
-               </VBox.margin></Label>
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-margin-bottom: 10px;" text="Historial de pedidos">
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin></Label>
                 <HBox fx:id="bocadillosHBox" alignment="TOP_CENTER">
                     <!-- Aquí se agregarán dinámicamente los VBox de los bocadillos -->
                 </HBox>

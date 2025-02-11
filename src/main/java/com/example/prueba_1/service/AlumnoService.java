@@ -34,7 +34,7 @@ public class AlumnoService {
         return null;
     }
 
-    public Alumno obtenerAlumnoPorId(Long id) {
+    public Alumno actualizarAlumnoPorId(Long id) {
         List<Alumno> listado_alumnos = getAll();
 
         for (Alumno alumno : listado_alumnos) {

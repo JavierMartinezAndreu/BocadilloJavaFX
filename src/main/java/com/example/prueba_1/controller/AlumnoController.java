@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,8 +24,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class AlumnoController {
@@ -38,20 +37,24 @@ public class AlumnoController {
     private Button botonCerrarSesion;
 
     @FXML
-    private ObservableList<Bocadillo> lista_bocadillos;
+    private Button botonHistorial;
 
     @FXML
-    private ObservableList<Pedido> lista_pedidos;
+    private List<Bocadillo> lista_bocadillos;
+
+    @FXML
+    private List<Pedido> lista_pedidos;
 
     private Alumno alumno;
 
 
     // Método para inicializar el controlador
     @FXML
-    public void initialize(Alumno alumno) {
-        this.alumno = alumno;
+    public void initialize(Alumno mi_alumno) {
+        alumno=mi_alumno;
         botonCerrarSesion.setOnAction(event -> cerrarSesion());
         mostrarDatosAlumno(alumno);
+        botonHistorial.setOnAction(event -> irAHistorial());
         cargarBocadillos();
         cargarPedidos(alumno);
         mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);
@@ -59,6 +62,28 @@ public class AlumnoController {
 
     public void mostrarDatosAlumno(Alumno alumno) {
         mensajeBienvenidaLabel.setText("Bienvenido " + alumno.getNombre());
+    }
+
+    public void irAHistorial() {
+        try {
+            // Cargar la vista de historial
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/fxml/alumno-pedidos-view.fxml"));
+            Parent root = fxmlLoader.load();
+
+            // Obtener el controlador de la nueva vista
+            AlumnoPedidosController controller = fxmlLoader.getController();
+
+            // Pasar el objeto Alumno al controlador
+            controller.initialize(alumno);
+
+            // Obtener el Stage actual y reemplazar la escena (sin crear un nuevo Stage)
+            Stage currentStage = (Stage) botonHistorial.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.setFullScreen(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void cerrarSesion(){
@@ -80,12 +105,12 @@ public class AlumnoController {
     public void cargarBocadillos(){
         //Instanciar bocadillos y guardarlos en una lista
         BocadilloService bocadilloService = new BocadilloService();
-        lista_bocadillos = FXCollections.observableArrayList(bocadilloService.getAll());
+        lista_bocadillos =  bocadilloService.getAll();
     }
 
     public void cargarPedidos(Alumno alumno){
         AlumnoService alumnoService = new AlumnoService();
-        lista_pedidos = FXCollections.observableArrayList(alumnoService.obtenerPedidosAlumno(alumno));
+        lista_pedidos = alumnoService.obtenerPedidosAlumno(alumno);
     }
 
     public void mostrarBocadillos(List<Bocadillo> lista_bocadillos, List<Pedido> lista_pedidos, Alumno alumno) {
@@ -150,7 +175,7 @@ public class AlumnoController {
                 } else {
                     botonPedido.setOnAction(event -> {
                         // Llamamos al método ReservarBocadillo
-                        ReservarBocadillo(alumno, bocadillo, (ObservableList<Pedido>) lista_pedidos);
+                        ReservarBocadillo(alumno, bocadillo, lista_pedidos);
                     });
                 }
 
@@ -164,7 +189,7 @@ public class AlumnoController {
     }
 
 
-    public void ReservarBocadillo(Alumno alumno, Bocadillo bocadillo, ObservableList<Pedido> lista_pedidos_alumno) {
+    public void ReservarBocadillo(Alumno alumno, Bocadillo bocadillo, List<Pedido> lista_pedidos_alumno) {
 
         // Crear y guardar el nuevo pedido
         Pedido nuevoPedido = new Pedido();
@@ -178,16 +203,16 @@ public class AlumnoController {
         PedidoService pedidoService = new PedidoService();
         pedidoService.guardarOActualizar(nuevoPedido, lista_pedidos_alumno);
 
-        // Recargar el alumno desde la base de datos
         AlumnoService alumnoService = new AlumnoService();
-        this.alumno = alumnoService.obtenerAlumnoPorId(alumno.getId());
+        Alumno mi_alumno = new Alumno();
+        mi_alumno = alumnoService.actualizarAlumnoPorId(alumno.getId());
 
         // Recargar los pedidos y los bocadillos después de hacer la reserva
-        cargarPedidos(alumno);  // Actualizar la lista de pedidos
+        cargarPedidos(mi_alumno);  // Actualizar la lista de pedidos
         cargarBocadillos();     // Actualizar la lista de bocadillos
 
         // Volver a mostrar los bocadillos con los datos actualizados
-        mostrarBocadillos(lista_bocadillos, lista_pedidos, alumno);  // Mostrar bocadillos actualizados
+        mostrarBocadillos(lista_bocadillos, lista_pedidos, mi_alumno);  // Mostrar bocadillos actualizados
     }
 
 }

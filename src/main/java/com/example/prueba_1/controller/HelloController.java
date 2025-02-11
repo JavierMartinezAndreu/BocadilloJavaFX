@@ -34,18 +34,7 @@ public class HelloController {
     // Método para inicializar el controlador
     @FXML
     public void initialize() {
-        /*UsuarioService usuarioService = new UsuarioService();
-        List<Usuario> usuario = usuarioService.getAll();
-        for(Usuario mi_usuario : usuario)
-        {
-            if (mi_usuario.getTipo_usuario().equals("alumnado")){
-                AlumnoService alumnoService = new AlumnoService();
-                Alumno alumno = alumnoService.obtenerAlumnoPorUsuario(mi_usuario);
-                System.out.println(alumno.toString());
-            }
-        }*/
 
-        // Configuramos el botón para validar las credenciales al hacer clic
         iniciarSesionButton.setOnAction(event -> validarCredenciales());
     }
 

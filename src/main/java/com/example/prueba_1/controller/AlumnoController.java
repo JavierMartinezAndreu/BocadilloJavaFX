@@ -73,8 +73,12 @@ public class AlumnoController {
             // Obtener el controlador de la nueva vista
             AlumnoPedidosController controller = fxmlLoader.getController();
 
+            //Recargar objeto alumno para tener los pedidos nuevos
+            AlumnoService alumnoService = new AlumnoService();
+            Alumno mi_alumno =  alumnoService.actualizarAlumnoPorId(alumno.getId());
+
             // Pasar el objeto Alumno al controlador
-            controller.initialize(alumno);
+            controller.initialize(mi_alumno);
 
             // Obtener el Stage actual y reemplazar la escena (sin crear un nuevo Stage)
             Stage currentStage = (Stage) botonHistorial.getScene().getWindow();
@@ -204,8 +208,7 @@ public class AlumnoController {
         pedidoService.guardarOActualizar(nuevoPedido, lista_pedidos_alumno);
 
         AlumnoService alumnoService = new AlumnoService();
-        Alumno mi_alumno = new Alumno();
-        mi_alumno = alumnoService.actualizarAlumnoPorId(alumno.getId());
+        Alumno mi_alumno =  alumnoService.actualizarAlumnoPorId(alumno.getId());
 
         // Recargar los pedidos y los bocadillos después de hacer la reserva
         cargarPedidos(mi_alumno);  // Actualizar la lista de pedidos

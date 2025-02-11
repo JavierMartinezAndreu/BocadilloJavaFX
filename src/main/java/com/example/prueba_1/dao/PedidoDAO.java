@@ -42,4 +42,14 @@ public class PedidoDAO {
             return session.createQuery("FROM Pedido", Pedido.class).list();
         }
     }
+
+    // Método para obtener los pedidos ordenados por precio de un alumno específico
+    public List<Pedido> getPedidosOrdenadosPorPrecio(Long id_alumno, boolean ascendente) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Pedido p WHERE p.alumno.id = :id_alumno ORDER BY p.precio_pedido " + (ascendente ? "ASC" : "DESC");
+            return session.createQuery(hql, Pedido.class)
+                    .setParameter("id_alumno", id_alumno)
+                    .list();
+        }
+    }
 }

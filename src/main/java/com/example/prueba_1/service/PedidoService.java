@@ -4,6 +4,8 @@ import com.example.prueba_1.dao.PedidoDAO;
 import com.example.prueba_1.dao.UsuarioDAO;
 import com.example.prueba_1.model.Pedido;
 import com.example.prueba_1.model.Usuario;
+import com.example.prueba_1.util.HibernateUtil;
+import org.hibernate.Session;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -51,5 +53,12 @@ public class PedidoService {
 
     public List<Pedido> getAll() {
         return pedidoDAO.getAll();
+    }
+
+    public List<Pedido> getPedidosOrdenadosPorPrecio(Long id_alumno, boolean ascendente) {
+        List<Pedido> historial_filtrado = pedidoDAO.getPedidosOrdenadosPorPrecio(id_alumno, ascendente);
+
+        return historial_filtrado;
+
     }
 }

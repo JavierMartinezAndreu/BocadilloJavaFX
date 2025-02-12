@@ -17,6 +17,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 public class AlumnoPedidosController {
 
@@ -90,19 +91,43 @@ public class AlumnoPedidosController {
         }
     }
 
-    public void cerrarSesion(){
-        try {
-            // Cargar la nueva vista desde el archivo FXML
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/fxml/hello-view.fxml"));
-            Scene helloScene = new Scene(fxmlLoader.load());
+    public void cerrarSesion() {
+        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+        alerta.setTitle("Cerrar Sesión");
+        alerta.setHeaderText(null); // Sin encabezado para un diseño más limpio
+        alerta.setContentText("¿Seguro que quieres cerrar sesión?\nPerderás el acceso a tu cuenta.");
 
-            HelloController controller = fxmlLoader.getController();
+        // Personalizar los botones
+        ButtonType botonAceptar = new ButtonType("Sí, cerrar sesión", ButtonBar.ButtonData.OK_DONE);
+        ButtonType botonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            // Obtener el Stage actual y reemplazar la escena
-            Stage currentStage = (Stage) botonCerrarSesion.getScene().getWindow();
-            currentStage.setScene(helloScene);
-        } catch (IOException e) {
-            e.printStackTrace();
+        alerta.getButtonTypes().setAll(botonAceptar, botonCancelar);
+
+        // Aplicar estilo con CSS
+        DialogPane dialogPane = alerta.getDialogPane();
+        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 14px; -fx-text-fill: #333333; -fx-font-weight: bold;");
+
+        // Cambiar el color de los botones
+        Button okButton = (Button) dialogPane.lookupButton(botonAceptar);
+        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;");
+
+        Button cancelButton = (Button) dialogPane.lookupButton(botonCancelar);
+        cancelButton.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: black; -fx-font-size: 13px;");
+
+        // Mostrar alerta y esperar la respuesta del usuario
+        Optional<ButtonType> resultado = alerta.showAndWait();
+
+        // Si el usuario elige cerrar sesión
+        if (resultado.isPresent() && resultado.get() == botonAceptar) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/fxml/hello-view.fxml"));
+                Scene helloScene = new Scene(fxmlLoader.load());
+
+                Stage currentStage = (Stage) botonCerrarSesion.getScene().getWindow();
+                currentStage.setScene(helloScene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

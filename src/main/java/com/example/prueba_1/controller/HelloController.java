@@ -81,7 +81,7 @@ public class HelloController {
             currentStage.setScene(alumnoScene);
 
             // Configurar el Stage para que se vea en pantalla completa
-            currentStage.setFullScreen(true);
+            currentStage.setMaximized(true);
 
         } catch (IOException e) {
             e.printStackTrace();

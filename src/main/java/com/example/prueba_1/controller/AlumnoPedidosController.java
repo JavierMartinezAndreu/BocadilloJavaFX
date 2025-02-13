@@ -31,7 +31,7 @@ public class AlumnoPedidosController {
     private Button botonCerrarSesion;
 
     @FXML
-    private ComboBox<String> comboBoxFiltroPrecio;
+    private ComboBox<String> comboBoxFiltro;
 
     @FXML
     private Button botonFiltrar;
@@ -172,7 +172,7 @@ public class AlumnoPedidosController {
     private void aplicarFiltro() {
         PedidoService pedidoService = new PedidoService();
         // Obtener la selección del filtro de precio
-        String filtroSeleccionado = comboBoxFiltroPrecio.getValue();
+        String filtroSeleccionado = comboBoxFiltro.getValue();
 
         // Filtrar según el tipo de filtro seleccionado
         List<Pedido> pedidosFiltrados = null;
@@ -183,6 +183,20 @@ public class AlumnoPedidosController {
         } else if ("Mayor a Menor".equals(filtroSeleccionado)) {
             // Filtrar de mayor a menor precio
             pedidosFiltrados = pedidoService.getPedidosOrdenadosPorPrecio(alumno.getId(), false);
+        }
+        if ("Caliente".equals(filtroSeleccionado)) {
+            // Filtrar de menor a mayor precio
+            pedidosFiltrados = pedidoService.getPedidosPorTipo(alumno.getId(), "Caliente");
+        } else if ("Frio".equals(filtroSeleccionado)) {
+            // Filtrar de mayor a menor precio
+            pedidosFiltrados = pedidoService.getPedidosPorTipo(alumno.getId(), "Frio");
+        }
+        if ("Fecha descendente".equals(filtroSeleccionado)) {
+            // Filtrar de menor a mayor precio
+            pedidosFiltrados = pedidoService.getPedidosPorFecha(alumno.getId(), true);
+        } else if ("Fecha ascendente".equals(filtroSeleccionado)) {
+            // Filtrar de mayor a menor precio
+            pedidosFiltrados = pedidoService.getPedidosPorFecha(alumno.getId(), false);
         }
 
         if (pedidosFiltrados != null) {

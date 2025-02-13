@@ -66,4 +66,25 @@ public class PedidoDAO {
                     .list();
         }
     }
+    public List<Pedido> getPedidosPorTipo(Long id_alumno, String tipo){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Pedido p " +
+                    "WHERE p.alumno.id = :id_alumno " +
+                    "AND LOWER(p.bocadillo.tipo) = :tipo";
+            return session.createQuery(hql, Pedido.class)
+                    .setParameter("id_alumno", id_alumno)
+                    .setParameter("tipo", tipo.toLowerCase())
+                    .list();
+            }
+        }
+
+    public List<Pedido> getPedidosPorFecha(Long id_alumno, boolean ascendente) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Pedido p WHERE p.alumno.id = :id_alumno ORDER BY p.fecha " + (ascendente ? "ASC" : "DESC");
+            return session.createQuery(hql, Pedido.class)
+                    .setParameter("id_alumno", id_alumno)
+                    .list();
+        }
+    }
 }
+

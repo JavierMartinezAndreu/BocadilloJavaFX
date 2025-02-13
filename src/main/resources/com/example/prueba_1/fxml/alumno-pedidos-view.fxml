@@ -42,11 +42,15 @@
                 <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Historial de Pedidos" />
                 <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1164.0">
                     <children>
-                        <ComboBox fx:id="comboBoxFiltroPrecio" minWidth="150.0" promptText="Filtrar por Precio" HBox.hgrow="NEVER">
+                        <ComboBox fx:id="comboBoxFiltro" minWidth="150.0" promptText="Selecciona el filtro" HBox.hgrow="NEVER">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Menor a Mayor" />
                                     <String fx:value="Mayor a Menor" />
+                                    <String fx:value="Caliente"/>
+                                    <String fx:value="Frio"/>
+                                    <String fx:value="Fecha descendente"/>
+                                    <String fx:value="Fecha ascendente"/>
                                 </FXCollections>
                             </items>
                         </ComboBox>

@@ -61,4 +61,16 @@ public class PedidoService {
         return historial_filtrado;
 
     }
+    public List<Pedido> getPedidosPorTipo(Long id_alumno, String tipo) {
+        List<Pedido> historial_filtrado = pedidoDAO.getPedidosPorTipo(id_alumno, tipo );
+
+        return historial_filtrado;
+
+    }
+    public List<Pedido> getPedidosPorFecha(Long id_alumno, boolean ascendente) {
+        List<Pedido> historial_filtrado = pedidoDAO.getPedidosPorFecha(id_alumno, ascendente);
+
+        return historial_filtrado;
+
+    }
 }

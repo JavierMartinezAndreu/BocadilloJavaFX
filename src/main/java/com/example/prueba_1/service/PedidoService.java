@@ -51,6 +51,14 @@ public class PedidoService {
         }
     }
 
+    public void eliminarPedido(Pedido pedido) {
+        if (pedido != null && pedido.getId() != null) {
+            pedidoDAO.delete(pedido);
+        } else {
+            throw new IllegalArgumentException("El pedido no puede ser nulo o sin ID.");
+        }
+    }
+
     public List<Pedido> getAll() {
         return pedidoDAO.getAll();
     }

@@ -142,79 +142,66 @@ public class AlumnoController {
     }
 
     public void mostrarBocadillos(List<Bocadillo> lista_bocadillos, List<Pedido> lista_pedidos, Alumno alumno) {
-        // Obtener el día actual
         String diaHoy = LocalDate.now().getDayOfWeek().name().toLowerCase();
-
-        // Limpiar el HBox antes de agregar los nuevos VBox
         bocadillosHBox.getChildren().clear();
-
-        // Establecer el espacio entre los VBox dentro del HBox
         bocadillosHBox.setSpacing(40);
 
-        // Filtrar bocadillos que coinciden con el día de la semana
         for (Bocadillo bocadillo : lista_bocadillos) {
             if (bocadillo.getDia_semana().toLowerCase().equals(diaHoy)) {
-                // Crear un nuevo VBox para cada bocadillo
                 VBox vbox = new VBox();
                 vbox.setStyle("-fx-background-color: #ffffff; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-border-color: #4CAF50; -fx-border-width: 2px;");
                 vbox.setPadding(new Insets(8));
-
-                // Establecer un tamaño fijo para cada VBox (en este caso, para asegurar el mismo tamaño)
                 vbox.setPrefHeight(150);
                 vbox.setPrefWidth(250);
 
-                //Declarar BocadilloService para obtener alérgenos
                 BocadilloService bocadilloService = new BocadilloService();
 
-                // Crear y agregar etiquetas con la información del bocadillo
                 Label nombreLabel = new Label("Nombre: " + bocadillo.getNombre());
                 Label ingredientesLabel = new Label("Ingredientes: " + bocadillo.getIngredientes());
                 Label tipoLabel = new Label("Tipo: " + bocadillo.getTipo());
                 Label alergenosLabel = new Label(bocadilloService.obtenerAlergenosComoString(bocadillo));
                 Label precioLabel = new Label("Precio: " + String.format("%.2f€", bocadillo.getPrecio_venta_publico()));
-
-                // Agregar las etiquetas al VBox
                 vbox.getChildren().addAll(nombreLabel, ingredientesLabel, tipoLabel, alergenosLabel, precioLabel);
-
-                // Establecer un alineamiento de las etiquetas (para asegurarse de que el texto no se corta)
                 vbox.setAlignment(Pos.TOP_CENTER);
 
-                // Verificar si ya existe un pedido del mismo Bocadillo y Alumno para el día de hoy
                 boolean pedido_existente = false;
-                if (!lista_bocadillos.isEmpty()){
-                    for (Pedido pedido : lista_pedidos) {
-                        // Convertir la fecha de tipo Date a LocalDate
-                        LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                        if (pedido.getBocadillo().getId().equals(bocadillo.getId()) && pedido.getAlumno().getId().equals(alumno.getId()) && fechaPedido.equals(LocalDate.now())) {
-                            pedido_existente = true;
-                            break;
-                        }
+                Pedido pedido_a_cancelar = null;
+                for (Pedido pedido : lista_pedidos) {
+                    LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    if (pedido.getBocadillo().getId().equals(bocadillo.getId()) && pedido.getAlumno().getId().equals(alumno.getId()) && fechaPedido.equals(LocalDate.now())) {
+                        pedido_existente = true;
+                        pedido_a_cancelar = pedido;
+                        break;
                     }
                 }
 
-                // Crear el botón para hacer el pedido
-                Button botonPedido = new Button(pedido_existente ? "Reservado" : "Pedir");
+                Button botonPedido = new Button(pedido_existente ? "Cancelar pedido" : "Pedir");
                 VBox.setMargin(botonPedido, new Insets(10, 0, 0, 0));
 
-                // Si ya está reservado, deshabilitar el botón y aplicar un estilo sombreado al VBox
                 if (pedido_existente) {
-                    botonPedido.setDisable(true);
-                    vbox.setStyle("-fx-background-color: #f0f0f0; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-border-color: #999999; -fx-border-width: 2px;");
+                    botonPedido.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white;");
+                    // Aplicar un estilo sombreado al VBox cuando el bocadillo esté reservado
+                    vbox.setStyle("-fx-background-color: #f0f0f0; " +
+                            "-fx-border-radius: 15px; " +
+                            "-fx-background-radius: 15px; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 2px; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);");
+                    botonPedido.setOnAction(event -> {
+                        cancelarPedido();
+                    });
                 } else {
                     botonPedido.setOnAction(event -> {
-                        // Llamamos al método ReservarBocadillo
                         ReservarBocadillo(alumno, bocadillo, lista_pedidos);
                     });
                 }
 
-                // Agregar el botón al VBox
                 vbox.getChildren().add(botonPedido);
-
-                // Agregar el VBox al HBox
                 bocadillosHBox.getChildren().add(vbox);
             }
         }
     }
+
 
 
     public void ReservarBocadillo(Alumno alumno, Bocadillo bocadillo, List<Pedido> lista_pedidos_alumno) {
@@ -240,6 +227,54 @@ public class AlumnoController {
 
         // Volver a mostrar los bocadillos con los datos actualizados
         mostrarBocadillos(lista_bocadillos, lista_pedidos, mi_alumno);  // Mostrar bocadillos actualizados
+    }
+
+    public void cancelarPedido() {
+        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+        alerta.setTitle("Cancelar Reserva");
+        alerta.setHeaderText(null); // Sin encabezado para un diseño más limpio
+        alerta.setContentText("¿Seguro que quieres cancelar la reserva?");
+
+        // Personalizar los botones
+        ButtonType botonAceptar = new ButtonType("Sí, cancelar reserva", ButtonBar.ButtonData.OK_DONE);
+        ButtonType botonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alerta.getButtonTypes().setAll(botonAceptar, botonCancelar);
+
+        // Aplicar estilo con CSS
+        DialogPane dialogPane = alerta.getDialogPane();
+        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 14px; -fx-text-fill: #333333; -fx-font-weight: bold;");
+
+        // Cambiar el color de los botones
+        Button okButton = (Button) dialogPane.lookupButton(botonAceptar);
+        okButton.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;");
+
+        Button cancelButton = (Button) dialogPane.lookupButton(botonCancelar);
+        cancelButton.setStyle("-fx-background-color: #DDDDDD; -fx-text-fill: black; -fx-font-size: 13px;");
+
+        // Mostrar alerta y esperar la respuesta del usuario
+        Optional<ButtonType> resultado = alerta.showAndWait();
+
+        // Si el usuario elige cerrar sesión
+        if (resultado.isPresent() && resultado.get() == botonAceptar) {
+            Pedido pedido_a_cancelar = null;
+            for (Pedido pedido : lista_pedidos) {
+                // Convertir la fecha de tipo Date a LocalDate
+                LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                if (fechaPedido.equals(LocalDate.now())) {
+                    pedido_a_cancelar = pedido; // Guardamos el pedido encontrado
+                    break;
+                }
+            }
+
+            PedidoService pedidoService = new PedidoService();
+            pedidoService.eliminarPedido(pedido_a_cancelar);
+            AlumnoService alumnoService = new AlumnoService();
+            Alumno mi_alumno = alumnoService.actualizarAlumnoPorId(alumno.getId());
+            cargarPedidos(mi_alumno);
+            mostrarBocadillos(lista_bocadillos, lista_pedidos, mi_alumno);
+        }
     }
 
 }

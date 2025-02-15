@@ -6,6 +6,10 @@ import com.example.prueba_1.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class PedidoDAO {
@@ -54,6 +58,22 @@ public class PedidoDAO {
     public List<Pedido> getAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Pedido", Pedido.class).list();
+        }
+    }
+
+    public List<Pedido> getPedidosDeHoy() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Obtener la fecha actual como Date
+            LocalDate hoy = LocalDate.now();
+            Date inicioDia = Date.from(hoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date finDia = Date.from(hoy.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
+
+            // Consulta HQL para filtrar por rango de fechas
+            String hql = "FROM Pedido p WHERE p.fecha BETWEEN :inicioDia AND :finDia";
+            return session.createQuery(hql, Pedido.class)
+                    .setParameter("inicioDia", inicioDia)
+                    .setParameter("finDia", finDia)
+                    .list();
         }
     }
 

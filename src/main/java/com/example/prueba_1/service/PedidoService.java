@@ -63,6 +63,10 @@ public class PedidoService {
         return pedidoDAO.getAll();
     }
 
+    public List<Pedido> getPedidosDeHoy() {
+        return pedidoDAO.getPedidosDeHoy();
+    }
+
     public List<Pedido> getPedidosOrdenadosPorPrecio(Long id_alumno, boolean ascendente) {
         List<Pedido> historial_filtrado = pedidoDAO.getPedidosOrdenadosPorPrecio(id_alumno, ascendente);
 

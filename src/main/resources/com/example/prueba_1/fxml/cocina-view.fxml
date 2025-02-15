@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="849.0" prefWidth="1204.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.prueba_1.controller.CocinaController">
+    <top>
+        <HBox prefHeight="100.0" style="-fx-background-color: #4CAF50; -fx-padding: 20px 10px;">
+            <children>
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../../images/ç.png" />
+                    </image>
+                </ImageView>
+                <Label fx:id="mensajeBienvenidaLabel" style="-fx-font-size: 20px;" text="¡Bienvenido!" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets left="20.0" top="15.0" />
+                    </HBox.margin>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="botonCerrarSesion" mnemonicParsing="false" text="CERRAR SESIÓN" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets right="20.0" top="15.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" prefHeight="617.0" prefWidth="1067.0" spacing="10">
+            <children>
+                <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Pedidos de hoy" />
+                <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1164.0" />
+                <TableView fx:id="tablaPedidos" maxWidth="650" prefWidth="650" style="-fx-background-color: #ffffff; -fx-border-color: #4CAF50; -fx-border-radius: 10px; -fx-padding: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);">
+                    <columns>
+                        <TableColumn fx:id="columnaAlumno" prefWidth="100.0" text="Alumno" />
+                        <TableColumn fx:id="columnaCurso" prefWidth="200.0" text="Curso" />
+                        <TableColumn fx:id="columnaBocadillo" prefWidth="200.0" text="Bocadillo" />
+                        <TableColumn fx:id="columnaTipo" prefWidth="150.0" text="Tipo" />
+                    </columns>
+                </TableView>
+
+            </children>
+            <BorderPane.margin>
+                <Insets top="30.0" />
+            </BorderPane.margin>
+        </VBox>
+    </center>
+</BorderPane>

@@ -28,7 +28,7 @@ import java.util.Optional;
 
 public class AlumnoController {
     @FXML
-    private HBox bocadillosHBox; // El contenedor en el que se agregarán los VBox dinámicos.
+    private HBox bocadillosHBox;
 
     @FXML
     private Label mensajeBienvenidaLabel;

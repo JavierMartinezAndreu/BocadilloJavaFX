@@ -42,6 +42,14 @@
                         <TableColumn fx:id="columnaTipo" prefWidth="150.0" text="Tipo" />
                     </columns>
                 </TableView>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5">
+                    <children>
+                        <Button fx:id="btnAnterior" disable="true" mnemonicParsing="false" onAction="#anteriorPagina" text="&lt;" />
+                        <TextField fx:id="txtPagina" alignment="CENTER" editable="false" text="1" prefWidth="40" />
+                        <Button fx:id="btnSiguiente" mnemonicParsing="false" onAction="#siguientePagina" text="&gt;" />
+                    </children>
+                </HBox>
+
 
             </children>
             <BorderPane.margin>

@@ -5,11 +5,13 @@ import com.example.prueba_1.model.Usuario;
 import com.example.prueba_1.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class PedidoDAO {
@@ -76,6 +78,44 @@ public class PedidoDAO {
                     .list();
         }
     }
+
+    public List<Pedido> getPaginated(int page, int offset, HashMap<String, String> filtros) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Obtener la fecha actual como Date
+            LocalDate hoy = LocalDate.now();
+            Date inicioDia = Date.from(hoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date finDia = Date.from(hoy.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
+
+            // Construcción de la consulta HQL
+            StringBuilder hql = new StringBuilder("FROM Pedido p WHERE p.fecha BETWEEN :inicioDia AND :finDia");
+
+            // Agregar condiciones dinámicas basadas en el HashMap
+            if (filtros != null) {
+                for (String key : filtros.keySet()) {
+                    hql.append(" AND p.").append(key).append(" LIKE :").append(key);
+                }
+            }
+
+            Query<Pedido> query = session.createQuery(hql.toString(), Pedido.class);
+
+            // Asignar valores a los parámetros de la consulta
+            query.setParameter("inicioDia", inicioDia);
+            query.setParameter("finDia", finDia);
+
+            if (filtros != null) {
+                for (HashMap.Entry<String, String> filtro : filtros.entrySet()) {
+                    query.setParameter(filtro.getKey(), "%" + filtro.getValue() + "%");
+                }
+            }
+
+            // Configurar paginación
+            query.setFirstResult((page - 1) * offset);
+            query.setMaxResults(offset);
+
+            return query.list();
+        }
+    }
+
 
     // Método para obtener los pedidos ordenados por precio de un alumno específico
     public List<Pedido> getPedidosOrdenadosPorPrecio(Long id_alumno, boolean ascendente) {

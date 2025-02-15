@@ -9,6 +9,7 @@ import org.hibernate.Session;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 
 public class PedidoService {
@@ -65,6 +66,10 @@ public class PedidoService {
 
     public List<Pedido> getPedidosDeHoy() {
         return pedidoDAO.getPedidosDeHoy();
+    }
+
+    public List<Pedido> getPaginated(int page, int offset, HashMap<String, String> filtros) {
+        return pedidoDAO.getPaginated(page, offset, filtros);
     }
 
     public List<Pedido> getPedidosOrdenadosPorPrecio(Long id_alumno, boolean ascendente) {

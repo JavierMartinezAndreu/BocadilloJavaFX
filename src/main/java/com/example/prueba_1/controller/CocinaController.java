@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,13 +45,30 @@ public class CocinaController {
     @FXML
     private TableColumn<Pedido, String> columnaTipo;
 
+    @FXML
+    private Button btnAnterior;
+    @FXML
+    private Button btnSiguiente;
+    @FXML
+    private TextField txtPagina;
+    @FXML
+    private Label lblTotal;
+    private static final int OFFSET=10;
+
+    private HashMap<String, String> filtros = new HashMap<>();
+
+    private long totalPedidos;
+
 
     @FXML
     public void initialize() {
         botonCerrarSesion.setOnAction(event -> cerrarSesion());
 
+        PedidoService pedidoService = new PedidoService();
+        List<Pedido> pedidos = pedidoService.getPaginated(1, OFFSET, null);
+
         configurarTabla();
-        cargarPedidos();
+        cargarPedidos(pedidos);
     }
 
     public void cerrarSesion() {
@@ -118,11 +136,46 @@ public class CocinaController {
         columnaCurso.setPrefWidth(60);
     }
 
-    private void cargarPedidos() {
-        PedidoService pedidoService = new PedidoService();
-        List<Pedido> pedidos = pedidoService.getPedidosDeHoy();
+    private void cargarPedidos(List<Pedido> pedidos) {
         if (pedidos != null && !pedidos.isEmpty()) {
             tablaPedidos.getItems().setAll(pedidos); // Agregar solo los pedidos existentes
+        }
+    }
+
+    @FXML
+    public void siguientePagina(){
+        int page = Integer.parseInt(txtPagina.getText());
+        page++;
+
+        PedidoService pedidoService = new PedidoService();
+        List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, null);
+        if (!pedidos.isEmpty()) {
+            cargarPedidos(pedidos);
+
+            txtPagina.setText(page + "");
+            btnAnterior.setDisable(false);
+        } else {
+            btnSiguiente.setDisable(true);
+        }
+    }
+
+    @FXML
+    public void anteriorPagina(){
+        int page = Integer.parseInt(txtPagina.getText());
+        page--;
+
+        if (page>0) {
+            PedidoService pedidoService = new PedidoService();
+            List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, null);
+            if (!pedidos.isEmpty()) {
+                cargarPedidos(pedidos);
+                txtPagina.setText(page + "");
+                btnSiguiente.setDisable(false);
+            } else {
+                btnAnterior.setDisable(true);
+            }
+        } else {
+            btnAnterior.setDisable(true);
         }
     }
 }

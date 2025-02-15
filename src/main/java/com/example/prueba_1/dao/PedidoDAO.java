@@ -79,6 +79,7 @@ public class PedidoDAO {
         }
     }
 
+
     public List<Pedido> getPaginated(int page, int offset, HashMap<String, String> filtros) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Obtener la fecha actual como Date
@@ -86,25 +87,46 @@ public class PedidoDAO {
             Date inicioDia = Date.from(hoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date finDia = Date.from(hoy.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
 
-            // Construcción de la consulta HQL
-            StringBuilder hql = new StringBuilder("FROM Pedido p WHERE p.fecha BETWEEN :inicioDia AND :finDia");
+            // Construcción de la consulta HQL con JOIN entre Pedido, Alumno y Bocadillo
+            StringBuilder hql = new StringBuilder("FROM Pedido p ")
+                    .append("JOIN p.alumno a ")
+                    .append("JOIN p.bocadillo b ")
+                    .append("WHERE p.fecha BETWEEN :inicioDia AND :finDia ");
 
-            // Agregar condiciones dinámicas basadas en el HashMap
+            // Agregar condiciones dinámicas basadas en el HashMap de filtros
             if (filtros != null) {
-                for (String key : filtros.keySet()) {
-                    hql.append(" AND p.").append(key).append(" LIKE :").append(key);
+                // Filtro por nombre de alumno
+                if (filtros.containsKey("nombre")) {
+                    hql.append("AND LOWER(a.nombre) LIKE :nombre ");
+                }
+
+                // Filtro por tipo de bocadillo
+                if (filtros.containsKey("tipoBocadillo")) {
+                    hql.append("AND LOWER(b.tipo) = :tipoBocadillo ");
+                }
+
+                // Filtro por nombre de curso
+                if (filtros.containsKey("nombreCurso")) {
+                    hql.append("AND LOWER(a.curso.nombre) LIKE :nombreCurso ");
                 }
             }
 
             Query<Pedido> query = session.createQuery(hql.toString(), Pedido.class);
 
-            // Asignar valores a los parámetros de la consulta
+            // Asignar los valores a los parámetros de la consulta
             query.setParameter("inicioDia", inicioDia);
             query.setParameter("finDia", finDia);
 
+            // Asignar los filtros adicionales
             if (filtros != null) {
-                for (HashMap.Entry<String, String> filtro : filtros.entrySet()) {
-                    query.setParameter(filtro.getKey(), "%" + filtro.getValue() + "%");
+                if (filtros.containsKey("nombre")) {
+                    query.setParameter("nombre", "%" + filtros.get("nombre").toLowerCase() + "%");
+                }
+                if (filtros.containsKey("tipoBocadillo")) {
+                    query.setParameter("tipoBocadillo", filtros.get("tipoBocadillo").toLowerCase());
+                }
+                if (filtros.containsKey("nombreCurso")) {
+                    query.setParameter("nombreCurso", "%" + filtros.get("nombreCurso").toLowerCase() + "%");
                 }
             }
 
@@ -115,6 +137,9 @@ public class PedidoDAO {
             return query.list();
         }
     }
+
+
+
 
 
     // Método para obtener los pedidos ordenados por precio de un alumno específico
@@ -146,5 +171,62 @@ public class PedidoDAO {
                     .list();
         }
     }
+
+    public long count(HashMap<String, String> filtros) {
+        // Separando para añadir de forma dinámica los filtros
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Obtener la fecha actual como Date
+            LocalDate hoy = LocalDate.now();
+            Date inicioDia = Date.from(hoy.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date finDia = Date.from(hoy.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
+
+            // Construcción de la consulta HQL para contar con JOIN entre Pedido, Alumno y Bocadillo
+            StringBuilder hql = new StringBuilder("SELECT COUNT(p) FROM Pedido p ")
+                    .append("JOIN p.alumno a ")
+                    .append("JOIN p.bocadillo b ")
+                    .append("WHERE p.fecha BETWEEN :inicioDia AND :finDia ");
+
+            // Agregar condiciones dinámicas basadas en el HashMap de filtros
+            if (filtros != null) {
+                // Filtro por nombre de alumno
+                if (filtros.containsKey("nombre")) {
+                    hql.append("AND LOWER(a.nombre) LIKE :nombre ");
+                }
+
+                // Filtro por tipo de bocadillo
+                if (filtros.containsKey("tipoBocadillo")) {
+                    hql.append("AND LOWER(b.tipo) = :tipoBocadillo ");
+                }
+
+                // Filtro por nombre de curso
+                if (filtros.containsKey("nombreCurso")) {
+                    hql.append("AND LOWER(a.curso.nombre) LIKE :nombreCurso ");
+                }
+            }
+
+            Query<Long> query = session.createQuery(hql.toString(), Long.class);
+
+            // Asignar los valores a los parámetros de la consulta
+            query.setParameter("inicioDia", inicioDia);
+            query.setParameter("finDia", finDia);
+
+            // Asignar los filtros adicionales
+            if (filtros != null) {
+                if (filtros.containsKey("nombre")) {
+                    query.setParameter("nombre", "%" + filtros.get("nombre").toLowerCase() + "%");
+                }
+                if (filtros.containsKey("tipoBocadillo")) {
+                    query.setParameter("tipoBocadillo", filtros.get("tipoBocadillo").toLowerCase());
+                }
+                if (filtros.containsKey("nombreCurso")) {
+                    query.setParameter("nombreCurso", "%" + filtros.get("nombreCurso").toLowerCase() + "%");
+                }
+            }
+
+            return query.getSingleResult();
+        }
+    }
+
+
 }
 

@@ -33,7 +33,18 @@
         <VBox alignment="TOP_CENTER" prefHeight="617.0" prefWidth="1067.0" spacing="10">
             <children>
                 <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Pedidos de hoy" />
-                <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1164.0" />
+                <HBox alignment="CENTER" prefHeight="42.0" prefWidth="600.0" spacing="5.0">
+                    <children>
+                        <TextField fx:id="txtNombre" promptText="Nombre del alumno" />
+                        <ComboBox fx:id="comboBoxCurso" prefWidth="100.0" promptText="Curso" />
+                        <ComboBox fx:id="comboBoxTipo" prefWidth="150.0" promptText="Tipo de bocadillo" />
+                        <Button fx:id="find" mnemonicParsing="false" onAction="#filtrarBuscador" text="Filtrar" />
+                        <Button fx:id="btnResetearFiltros" text="Resetear Filtros" onAction="#resetearFiltros" />
+                    </children>
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </HBox>
                 <TableView fx:id="tablaPedidos" maxWidth="650" prefWidth="650" style="-fx-background-color: #ffffff; -fx-border-color: #4CAF50; -fx-border-radius: 10px; -fx-padding: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);">
                     <columns>
                         <TableColumn fx:id="columnaAlumno" prefWidth="100.0" text="Alumno" />
@@ -45,10 +56,15 @@
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5">
                     <children>
                         <Button fx:id="btnAnterior" disable="true" mnemonicParsing="false" onAction="#anteriorPagina" text="&lt;" />
-                        <TextField fx:id="txtPagina" alignment="CENTER" editable="false" text="1" prefWidth="40" />
+                        <TextField fx:id="txtPagina" alignment="CENTER" editable="false" prefWidth="40" text="1" />
                         <Button fx:id="btnSiguiente" mnemonicParsing="false" onAction="#siguientePagina" text="&gt;" />
                     </children>
                 </HBox>
+                <Label fx:id="lblTotal" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="288.0" text="Label">
+                    <VBox.margin>
+                        <Insets left="20.0" />
+                    </VBox.margin>
+                </Label>
 
 
             </children>

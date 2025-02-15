@@ -90,4 +90,8 @@ public class PedidoService {
         return historial_filtrado;
 
     }
+
+    public long count(HashMap<String, String> filtros) {
+        return pedidoDAO.count(filtros);
+    }
 }

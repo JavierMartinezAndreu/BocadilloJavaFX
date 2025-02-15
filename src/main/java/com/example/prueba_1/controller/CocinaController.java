@@ -1,5 +1,7 @@
 package com.example.prueba_1.controller;
 
+import com.example.prueba_1.model.Curso;
+import com.example.prueba_1.service.CursoService;
 import com.example.prueba_1.service.PedidoService;
 import com.example.prueba_1.model.Pedido;
 import com.example.prueba_1.model.Alumno;
@@ -34,6 +36,15 @@ public class CocinaController {
     private TableView<Pedido> tablaPedidos;
 
     @FXML
+    private TextField txtNombre;
+
+    @FXML
+    private ComboBox comboBoxCurso;
+
+    @FXML
+    private ComboBox comboBoxTipo;
+
+    @FXML
     private TableColumn<Pedido, String> columnaAlumno;
 
     @FXML
@@ -63,6 +74,18 @@ public class CocinaController {
     @FXML
     public void initialize() {
         botonCerrarSesion.setOnAction(event -> cerrarSesion());
+
+        // Rellenar los combo box
+        CursoService cursoService = new CursoService();
+        List<Curso> cursos = cursoService.getAll();
+        comboBoxCurso.getItems().clear();
+        for (Curso curso: cursos){
+            comboBoxCurso.getItems().add(curso.getNombre());
+        }
+        comboBoxTipo.getItems().clear();  // Limpiar los elementos existentes
+        comboBoxTipo.getItems().add("caliente");
+        comboBoxTipo.getItems().add("frio");
+
 
         PedidoService pedidoService = new PedidoService();
         List<Pedido> pedidos = pedidoService.getPaginated(1, OFFSET, null);
@@ -143,12 +166,78 @@ public class CocinaController {
     }
 
     @FXML
+    public void filtrarBuscador() {
+        filtros.clear();
+
+        // Filtro por el nombre de alumno (si existe en el cuadro de texto)
+        if (!txtNombre.getText().isEmpty()) {
+            filtros.put("nombre", txtNombre.getText());
+        }
+
+        // Filtro por el tipo de bocadillo
+        if (comboBoxTipo.getValue() != null) {
+            filtros.put("tipoBocadillo", (String) comboBoxTipo.getValue());
+        }
+
+        // Filtro por el curso (si se ha seleccionado un curso en el combo box)
+        if (comboBoxCurso.getValue() != null) {
+            filtros.put("nombreCurso", (String) comboBoxCurso.getValue());
+        }
+
+        // Llamar al servicio de Pedido para obtener el total de pedidos y los pedidos paginados
+        PedidoService pedidoService = new PedidoService();
+
+        // Obtener el total de pedidos que coinciden con los filtros aplicados
+        totalPedidos = pedidoService.count(filtros);
+
+        // Obtener la lista de pedidos paginados que coinciden con los filtros
+        List<Pedido> pedidos = pedidoService.getPaginated(1, OFFSET, filtros);
+
+        // Cargar los pedidos en la tabla
+        cargarPedidos(pedidos);
+
+        // Actualizar la interfaz de usuario
+        txtPagina.setText("1");
+        btnSiguiente.setDisable(false);
+        lblTotal.setText("Total registros: " + totalPedidos + " - Total páginas: " + Math.round(Math.ceil((float) totalPedidos / (float) OFFSET)));
+    }
+
+    @FXML
+    public void resetearFiltros() {
+        // Limpiar los campos de texto y los ComboBox
+        txtNombre.clear();
+        comboBoxTipo.getSelectionModel().clearSelection();
+        comboBoxCurso.getSelectionModel().clearSelection();
+        comboBoxCurso.setValue("Seleccione un curso");
+        comboBoxTipo.setValue("Seleccione tipo de bocadillo");
+
+
+
+        // Limpiar el HashMap de filtros
+        filtros.clear();
+
+        // Volver a cargar los pedidos sin filtros
+        PedidoService pedidoService = new PedidoService();
+        List<Pedido> pedidos = pedidoService.getPaginated(1, OFFSET, null);
+
+        // Recargar la tabla de pedidos
+        cargarPedidos(pedidos);
+
+        // Reiniciar la interfaz de usuario
+        txtPagina.setText("1");
+        btnSiguiente.setDisable(false);
+        lblTotal.setText("Total registros: " + pedidos.size() + " - Total páginas: " + Math.round(Math.ceil((float) pedidos.size() / (float) OFFSET)));
+    }
+
+
+
+    @FXML
     public void siguientePagina(){
         int page = Integer.parseInt(txtPagina.getText());
         page++;
 
         PedidoService pedidoService = new PedidoService();
-        List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, null);
+        List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, filtros);
         if (!pedidos.isEmpty()) {
             cargarPedidos(pedidos);
 
@@ -166,7 +255,7 @@ public class CocinaController {
 
         if (page>0) {
             PedidoService pedidoService = new PedidoService();
-            List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, null);
+            List<Pedido> pedidos = pedidoService.getPaginated(page, OFFSET, filtros);
             if (!pedidos.isEmpty()) {
                 cargarPedidos(pedidos);
                 txtPagina.setText(page + "");

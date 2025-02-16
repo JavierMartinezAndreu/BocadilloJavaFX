@@ -51,6 +51,7 @@
                         <TableColumn fx:id="columnaCurso" prefWidth="200.0" text="Curso" />
                         <TableColumn fx:id="columnaBocadillo" prefWidth="200.0" text="Bocadillo" />
                         <TableColumn fx:id="columnaTipo" prefWidth="150.0" text="Tipo" />
+                        <TableColumn fx:id="columnaRecogido" prefWidth="100.0" text="Recogido" />
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5">

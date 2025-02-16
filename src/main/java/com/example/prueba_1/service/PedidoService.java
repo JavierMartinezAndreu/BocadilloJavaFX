@@ -94,4 +94,8 @@ public class PedidoService {
     public long count(HashMap<String, String> filtros) {
         return pedidoDAO.count(filtros);
     }
+
+    public void entregarPedido(Pedido pedido){
+        pedidoDAO.update(pedido);
+    }
 }

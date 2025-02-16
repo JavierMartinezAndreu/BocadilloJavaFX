@@ -212,7 +212,7 @@ public class AlumnoController {
         nuevoPedido.setBocadillo(bocadillo);
         nuevoPedido.setPrecio_pedido(bocadillo.getPrecio_venta_publico());
         nuevoPedido.setFecha(java.sql.Date.valueOf(LocalDate.now()));
-        nuevoPedido.setFecha_recogida(null);
+        nuevoPedido.setRecogido(false);
 
         // Guardar el pedido
         PedidoService pedidoService = new PedidoService();

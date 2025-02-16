@@ -16,13 +16,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
@@ -55,6 +58,9 @@ public class CocinaController {
 
     @FXML
     private TableColumn<Pedido, String> columnaTipo;
+
+    @FXML
+    private TableColumn<Pedido, Boolean> columnaRecogido;
 
     @FXML
     private Button btnAnterior;
@@ -138,26 +144,65 @@ public class CocinaController {
         // Evitar que se agregue una columna extra innecesaria
         tablaPedidos.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        // Configurar la columna Bocadillo (nombre)
+        // Evitar la selección de filas pero permitir celdas interactivas
+        tablaPedidos.getSelectionModel().setCellSelectionEnabled(true);
+        tablaPedidos.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+        // Configurar columnas de texto
         columnaBocadillo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getBocadillo().getNombre()));
-        columnaBocadillo.setPrefWidth(200); // Fijar ancho para evitar expansión
+        columnaBocadillo.setPrefWidth(190);
 
-        // Configurar la columna Tipo de Bocadillo
         columnaTipo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getBocadillo().getTipo()));
-        columnaTipo.setPrefWidth(60);
+        columnaTipo.setPrefWidth(80);
 
-        // Configurar la columna de Alumno
         columnaAlumno.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getAlumno().getNombre()));
-        columnaAlumno.setPrefWidth(200);
+        columnaAlumno.setPrefWidth(230);
 
-        // Configurar la columna clase de alumno
         columnaCurso.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getAlumno().getCurso().getNombre()));
         columnaCurso.setPrefWidth(60);
+
+        // Configurar columna Recogido con CheckBox funcional
+        columnaRecogido.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().getRecogido()));
+
+        columnaRecogido.setCellFactory(tc -> new TableCell<Pedido, Boolean>() {
+            private final CheckBox checkBox = new CheckBox();
+
+            {
+                checkBox.setOnAction(event -> {
+                    Pedido pedido = getTableView().getItems().get(getIndex());
+                    boolean nuevoValor = checkBox.isSelected();
+
+                    pedido.setRecogido(nuevoValor); // Actualizar el modelo
+
+                    // Guardar el cambio en la base de datos
+                    PedidoService pedidoService = new PedidoService();
+                    pedidoService.entregarPedido(pedido);
+
+                    // Refrescar la tabla para actualizar la vista
+                    getTableView().refresh();
+                });
+            }
+
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    checkBox.setSelected(item);
+                    setGraphic(checkBox);
+                }
+            }
+        });
     }
+
+
+
 
     private void cargarPedidos(List<Pedido> pedidos) {
         if (pedidos != null && !pedidos.isEmpty()) {

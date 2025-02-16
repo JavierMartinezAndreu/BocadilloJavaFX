@@ -28,17 +28,17 @@ public class Pedido {
     @Column(nullable = false)
     private Date fecha;
 
-    @Column(name = "fecha_recogida", nullable = true)
-    private Date fecha_recogida;
+    @Column(name = "recogido", nullable = true)
+    private boolean recogido;
 
 
-    public Pedido(Long id, Alumno alumno, Bocadillo bocadillo, double precio_pedido, Date fecha, Date fecha_recogida) {
+    public Pedido(Long id, Alumno alumno, Bocadillo bocadillo, double precio_pedido, Date fecha, boolean recogido) {
         this.id = id;
         this.alumno = alumno;
         this.bocadillo = bocadillo;
         this.precio_pedido = precio_pedido;
         this.fecha = fecha;
-        this.fecha_recogida = fecha_recogida;
+        this.recogido = recogido;
     }
 
     public Pedido() {
@@ -84,11 +84,11 @@ public class Pedido {
         this.fecha = fecha;
     }
 
-    public Date getFecha_recogida() {
-        return fecha_recogida;
+    public boolean getRecogido() {
+        return recogido;
     }
 
-    public void setFecha_recogida(Date fecha_recogida) {
-        this.fecha_recogida = fecha_recogida;
+    public void setRecogido(boolean recogido) {
+        this.recogido = recogido;
     }
 }

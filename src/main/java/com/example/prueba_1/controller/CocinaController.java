@@ -24,10 +24,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -46,6 +48,13 @@ public class CocinaController {
 
     @FXML
     private ComboBox comboBoxTipo;
+
+    @FXML
+    private PieChart graficoTipoBocadillo;
+
+    @FXML
+    private PieChart graficoRecogido;
+
 
     @FXML
     private TableColumn<Pedido, String> columnaAlumno;
@@ -98,6 +107,7 @@ public class CocinaController {
 
         configurarTabla();
         cargarPedidos(pedidos);
+        actualizarGraficos();
     }
 
     public void cerrarSesion() {
@@ -137,6 +147,69 @@ public class CocinaController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void actualizarGraficos() {
+        PedidoService pedidoService = new PedidoService();
+        List<Pedido> pedidos = pedidoService.getPedidosDeHoy();
+
+        // Contadores para "frío" y "caliente"
+        int countFrio = 0;
+        int countCaliente = 0;
+        int countRecogidos = 0;
+        int countNoRecogidos = 0;
+
+        for (Pedido pedido : pedidos) {
+            String tipo = pedido.getBocadillo().getTipo().toLowerCase();
+            boolean recogido = pedido.getRecogido();
+
+            if (tipo.equals("frio")) {
+                countFrio++;
+            } else if (tipo.equals("caliente")) {
+                countCaliente++;
+            }
+
+            if (recogido) {
+                countRecogidos++;
+            } else {
+                countNoRecogidos++;
+            }
+        }
+
+        // Datos del gráfico de tipo de bocadillo
+        ObservableList<PieChart.Data> datosTipo = FXCollections.observableArrayList(
+                new PieChart.Data("Fríos (" + countFrio + ")", countFrio),
+                new PieChart.Data("Calientes (" + countCaliente + ")", countCaliente)
+        );
+
+        graficoTipoBocadillo.setData(datosTipo);
+        graficoTipoBocadillo.setLegendVisible(false);
+        estilizarGrafico(graficoTipoBocadillo, "#3498db", "#e74c3c"); // Azul y rojo
+
+        // Datos del gráfico de recogidos
+        ObservableList<PieChart.Data> datosRecogido = FXCollections.observableArrayList(
+                new PieChart.Data("Recogidos (" + countRecogidos + ")", countRecogidos),
+                new PieChart.Data("No Recogidos (" + countNoRecogidos + ")", countNoRecogidos)
+        );
+
+        graficoRecogido.setData(datosRecogido);
+        graficoRecogido.setLegendVisible(false);
+        estilizarGrafico(graficoRecogido, "#2ecc71", "#e74c3c");
+    }
+
+    // Método para aplicar estilos a un gráfico
+    private void estilizarGrafico(PieChart chart, String color1, String color2) {
+        int i = 0;
+        for (PieChart.Data data : chart.getData()) {
+            String color = (i == 0) ? color1 : color2;
+            data.getNode().setStyle("-fx-pie-color: " + color + ";");
+
+            // Tooltip para mostrar valores al pasar el ratón
+            Tooltip tooltip = new Tooltip(data.getName() + ": " + (int) data.getPieValue());
+            tooltip.setFont(new Font("Arial", 14));
+            Tooltip.install(data.getNode(), tooltip);
+            i++;
         }
     }
 
@@ -184,6 +257,9 @@ public class CocinaController {
 
                     // Refrescar la tabla para actualizar la vista
                     getTableView().refresh();
+
+                    //Actualizar el gráfico de recogidos
+                    actualizarGraficos();
                 });
             }
 
@@ -208,6 +284,10 @@ public class CocinaController {
         if (pedidos != null && !pedidos.isEmpty()) {
             tablaPedidos.getItems().setAll(pedidos); // Agregar solo los pedidos existentes
         }
+        // Obtener el total de pedidos que coinciden con los filtros aplicados
+        PedidoService pedidoService = new PedidoService();
+        totalPedidos = pedidoService.count(filtros);
+        lblTotal.setText("Total registros: " + totalPedidos + " - Total páginas: " + Math.round(Math.ceil((float) totalPedidos / (float) OFFSET)));
     }
 
     @FXML

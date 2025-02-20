@@ -14,6 +14,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class AdministradorController {
 
     @FXML
@@ -29,6 +32,14 @@ public class AdministradorController {
     private TableColumn<Alumno, String> columnaBocadillo;
 
     @FXML
+    private Label lblTotal;
+    private static final int OFFSET=10;
+
+    private HashMap<String, String> filtros = new HashMap<>();
+
+    private long totalPedidos;
+
+    @FXML
     private TableColumn<Alumno, Void> columnaAcciones;
 
     private ObservableList<Alumno> listaAlumnos;
@@ -38,22 +49,29 @@ public class AdministradorController {
     private PedidoService pedidoService= new PedidoService();
 
 
+
     @FXML
     public void initialize() {
         AlumnoService alumnoService = new AlumnoService();
         listaAlumnos = FXCollections.observableArrayList(alumnoService.getAll());
 
+        // Configurar las columnas de la tabla
         columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         columnaCurso.setCellValueFactory(new PropertyValueFactory<>("curso"));
+
+        // Mostrar el pedido de hoy en la columna de bocadillos
         columnaBocadillo.setCellValueFactory(cellData -> {
-            Pedido pedido = cellData.getValue().getPedidodehoy();
-            return pedido != null ? new ReadOnlyStringWrapper(pedido.getBocadillo().getNombre()) : new ReadOnlyStringWrapper("Sin pedido");
+            Alumno alumno = cellData.getValue();
+            Pedido pedidoHoy = pedidoService.getPedidosDeHoy(alumno.getId());
+            return pedidoHoy != null
+                    ? new ReadOnlyStringWrapper(pedidoHoy.getBocadillo().getNombre())
+                    : new ReadOnlyStringWrapper("Sin pedido");
         });
 
         agregarBotonesAccion();
-
         tablaAlumnos.setItems(listaAlumnos);
     }
+
 
     private void agregarBotonesAccion() {
         Callback<TableColumn<Alumno, Void>, TableCell<Alumno, Void>> cellFactory = param -> new TableCell<>() {

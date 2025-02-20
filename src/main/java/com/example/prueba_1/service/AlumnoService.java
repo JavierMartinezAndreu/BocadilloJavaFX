@@ -3,6 +3,7 @@ package com.example.prueba_1.service;
 import com.example.prueba_1.dao.AlumnoDAO;
 import com.example.prueba_1.model.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class AlumnoService {
@@ -54,6 +55,14 @@ public class AlumnoService {
         } else {
             return pedidos;
         }
+    }
+
+    public List<Alumno> getPaginated(int page, int offset) {
+        return alumnoDAO.getPaginated(page, offset);
+    }
+
+    public long count() {
+        return alumnoDAO.count();
     }
 
 }

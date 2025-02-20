@@ -59,6 +59,8 @@ public class HelloController {
                     }
                 } else if (mi_usuario.getTipo_usuario().equals("cocina")) {
                     redirigirCocina();
+                } else if (mi_usuario.getTipo_usuario().equals("admin")) {
+                    redirigirAdmin();
                 }
             } else {
                 mensajeLabel.setText("Usuario o contraseña incorrectos.");
@@ -103,6 +105,28 @@ public class HelloController {
             // Obtener el Stage actual y reemplazar la escena
             Stage currentStage = (Stage) iniciarSesionButton.getScene().getWindow();
             currentStage.setScene(cocinaScene);
+
+            // Configurar el Stage para que se vea en pantalla completa
+            currentStage.setMaximized(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void redirigirAdmin() {
+        try {
+            // Cargar la nueva vista desde el archivo FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/prueba_1/fxml/administrador-view.fxml"));
+            Scene adminScene = new Scene(fxmlLoader.load());
+
+
+            AdministradorController controller = fxmlLoader.getController();
+            controller.initialize();
+
+            // Obtener el Stage actual y reemplazar la escena
+            Stage currentStage = (Stage) iniciarSesionButton.getScene().getWindow();
+            currentStage.setScene(adminScene);
 
             // Configurar el Stage para que se vea en pantalla completa
             currentStage.setMaximized(true);

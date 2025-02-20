@@ -4,6 +4,7 @@ import com.example.prueba_1.model.Alumno;
 import com.example.prueba_1.model.Pedido;
 import com.example.prueba_1.service.AdministradorService;
 import com.example.prueba_1.service.AlumnoService;
+import com.example.prueba_1.service.PedidoService;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +35,8 @@ public class AdministradorController {
 
     private AdministradorService administradorService= new AdministradorService();
 
+    private PedidoService pedidoService= new PedidoService();
+
 
     @FXML
     public void initialize() {
@@ -43,7 +46,7 @@ public class AdministradorController {
         columnaNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         columnaCurso.setCellValueFactory(new PropertyValueFactory<>("curso"));
         columnaBocadillo.setCellValueFactory(cellData -> {
-            Pedido pedido = cellData.getValue().getPedidoActual();
+            Pedido pedido = cellData.getValue().getPedidodehoy();
             return pedido != null ? new ReadOnlyStringWrapper(pedido.getBocadillo().getNombre()) : new ReadOnlyStringWrapper("Sin pedido");
         });
 

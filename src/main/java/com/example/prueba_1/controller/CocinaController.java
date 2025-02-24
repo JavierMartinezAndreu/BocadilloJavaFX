@@ -221,25 +221,29 @@ public class CocinaController {
         tablaPedidos.getSelectionModel().setCellSelectionEnabled(true);
         tablaPedidos.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        // Configurar columnas de texto
+        // Configurar la columna Bocadillo (nombre)
         columnaBocadillo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getBocadillo().getNombre()));
         columnaBocadillo.setPrefWidth(190);
 
+        // Configurar la columna Tipo de Bocadillo
         columnaTipo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getBocadillo().getTipo()));
-        columnaTipo.setPrefWidth(80);
+        columnaTipo.setPrefWidth(150);
 
+        // Configurar la columna de Alumno
         columnaAlumno.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getAlumno().getNombre()));
         columnaAlumno.setPrefWidth(230);
 
+        // Configurar la columna Curso
         columnaCurso.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getAlumno().getCurso().getNombre()));
         columnaCurso.setPrefWidth(60);
 
-        // Configurar columna Recogido con CheckBox funcional
-        columnaRecogido.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().getRecogido()));
+        // Configurar la columna Recogido con CheckBox funcional
+        columnaRecogido.setCellValueFactory(cellData ->
+                new SimpleBooleanProperty(cellData.getValue().getRecogido()));
 
         columnaRecogido.setCellFactory(tc -> new TableCell<Pedido, Boolean>() {
             private final CheckBox checkBox = new CheckBox();
@@ -248,7 +252,6 @@ public class CocinaController {
                 checkBox.setOnAction(event -> {
                     Pedido pedido = getTableView().getItems().get(getIndex());
                     boolean nuevoValor = checkBox.isSelected();
-
                     pedido.setRecogido(nuevoValor); // Actualizar el modelo
 
                     // Guardar el cambio en la base de datos
@@ -258,7 +261,7 @@ public class CocinaController {
                     // Refrescar la tabla para actualizar la vista
                     getTableView().refresh();
 
-                    //Actualizar el gráfico de recogidos
+                    // Actualizar los gráficos, si corresponde
                     actualizarGraficos();
                 });
             }
@@ -266,7 +269,6 @@ public class CocinaController {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (empty || item == null) {
                     setGraphic(null);
                 } else {
@@ -275,14 +277,32 @@ public class CocinaController {
                 }
             }
         });
+        columnaRecogido.setPrefWidth(100);
+
+        // Colorear la fila completa según el tipo del bocadillo
+        tablaPedidos.setRowFactory(tv -> new TableRow<Pedido>() {
+            @Override
+            protected void updateItem(Pedido pedido, boolean empty) {
+                super.updateItem(pedido, empty);
+                if (empty || pedido == null) {
+                    setStyle("");
+                } else {
+                    String tipo = pedido.getBocadillo().getTipo().toLowerCase();
+                    if (tipo.equals("frio")) {
+                        setStyle("-fx-background-color: #d0eaff;");
+                    } else if (tipo.equals("caliente")) {
+                        setStyle("-fx-background-color: #ffd0d0;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
     }
-
-
-
 
     private void cargarPedidos(List<Pedido> pedidos) {
         if (pedidos != null && !pedidos.isEmpty()) {
-            tablaPedidos.getItems().setAll(pedidos); // Agregar solo los pedidos existentes
+            tablaPedidos.getItems().setAll(pedidos);
         }
         // Obtener el total de pedidos que coinciden con los filtros aplicados
         PedidoService pedidoService = new PedidoService();

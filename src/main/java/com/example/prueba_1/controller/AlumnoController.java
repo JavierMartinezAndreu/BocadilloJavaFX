@@ -84,7 +84,6 @@ public class AlumnoController {
             // Obtener el Stage actual y reemplazar la escena (sin crear un nuevo Stage)
             Stage currentStage = (Stage) botonHistorial.getScene().getWindow();
             currentStage.setScene(new Scene(root));
-            currentStage.setMaximized(true);
 
         } catch (IOException e) {
             e.printStackTrace();

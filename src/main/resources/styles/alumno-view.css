@@ -1,36 +1,51 @@
-/* Barra de navegación */
-.navbar {
-    background-color: #4CAF50; /* Mismo verde del header */
-    padding: 10px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+/* Estilo global (opcional) */
+.root {
+    -fx-font-family: "Arial", sans-serif;
 }
 
-/* Estilo para el Label */
-.seleccionado-mensaje {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: black;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 5px;
-    border: 2px solid #3e8e41;
-    font-size: 16px;
+/* Estilo para la barra superior */
+#topBar {
+    -fx-background-color: #4CAF50;
+    -fx-padding: 20px 10px;
 }
 
-/* Estilo para el botón */
-.logout-btn {
-    background-color: #fff;
-    color: #4CAF50;
-    border: 2px solid #4CAF50;
-    border-radius: 4px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s, color 0.3s;
+/* Estilo para la etiqueta de bienvenida */
+#mensajeBienvenidaLabel {
+    -fx-font-size: 20px;
 }
 
-.logout-btn:hover {
-    background-color: #4CAF50;
-    color: #fff;
+/* Estilo para los botones del top */
+#botonHistorial {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+
+#botonCerrarSesion {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+
+/* Estilo para el VBox central */
+#centerVBox {
+    -fx-padding: 20px;
+}
+
+/* Estilo para el título "Pide tu bocadillo" */
+#tituloLabel {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    /* En JavaFX no existe margin-bottom vía CSS; se suele definir en el FXML o con contenedores */
+}
+
+/* Opcional: Si deseas definir estilos para el HBox que contendrá los bocadillos */
+#bocadillosHBox {
+    -fx-spacing: 40;
 }

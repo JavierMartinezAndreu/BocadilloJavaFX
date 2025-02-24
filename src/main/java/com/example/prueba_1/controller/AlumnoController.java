@@ -17,6 +17,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -48,7 +50,6 @@ public class AlumnoController {
     private Alumno alumno;
 
 
-    // Método para inicializar el controlador
     @FXML
     public void initialize(Alumno mi_alumno) {
         alumno=mi_alumno;
@@ -93,7 +94,7 @@ public class AlumnoController {
     public void cerrarSesion() {
         Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
         alerta.setTitle("Cerrar Sesión");
-        alerta.setHeaderText(null); // Sin encabezado para un diseño más limpio
+        alerta.setHeaderText(null);
         alerta.setContentText("¿Seguro que quieres cerrar sesión?\nPerderás el acceso a tu cuenta.");
 
         // Personalizar los botones
@@ -148,39 +149,73 @@ public class AlumnoController {
 
         for (Bocadillo bocadillo : lista_bocadillos) {
             if (bocadillo.getDia_semana().toLowerCase().equals(diaHoy)) {
+                // Creo el vbox de cada bocadillo
                 VBox vbox = new VBox();
+                vbox.setPrefHeight(220);
+                vbox.setPrefWidth(300);
+                vbox.setSpacing(10);
+                vbox.setPadding(new Insets(10));
                 vbox.setStyle("-fx-background-color: #ffffff; -fx-border-radius: 15px; -fx-background-radius: 15px; -fx-border-color: #4CAF50; -fx-border-width: 2px;");
-                vbox.setPadding(new Insets(8));
-                vbox.setPrefHeight(150);
-                vbox.setPrefWidth(250);
 
+                // Nombre del bocadillo
+                Label nombreLabel = new Label(bocadillo.getNombre());
+                nombreLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
+                // Ingredientes
+                TextFlow ingredientesFlow = new TextFlow();
+                Text ingredientesTitulo = new Text("Ingredientes: ");
+                ingredientesTitulo.setStyle("-fx-font-weight: bold;");
+                Text ingredientesTexto = new Text(bocadillo.getIngredientes());
+                ingredientesFlow.getChildren().addAll(ingredientesTitulo, ingredientesTexto);
+
+                // Tipo
+                TextFlow tipoFlow = new TextFlow();
+                Text tipoTitulo = new Text("Tipo: ");
+                tipoTitulo.setStyle("-fx-font-weight: bold;");
+                Text tipoTexto = new Text(bocadillo.getTipo());
+                tipoFlow.getChildren().addAll(tipoTitulo, tipoTexto);
+
+                // Precio
+                TextFlow precioFlow = new TextFlow();
+                Text precioTitulo = new Text("Precio: ");
+                precioTitulo.setStyle("-fx-font-weight: bold;");
+                Text precioTexto = new Text(String.format("%.2f€", bocadillo.getPrecio_venta_publico()));
+                precioFlow.getChildren().addAll(precioTitulo, precioTexto);
+
+                // Alergenos
                 BocadilloService bocadilloService = new BocadilloService();
+                TextFlow alergenosFlow = new TextFlow();
+                Text alergenosTitulo = new Text("Alergenos: ");
+                alergenosTitulo.setStyle("-fx-font-weight: bold;");
+                Text alergenosTexto = new Text(bocadilloService.obtenerAlergenosComoString(bocadillo));
+                alergenosFlow.getChildren().addAll(alergenosTitulo, alergenosTexto);
 
-                Label nombreLabel = new Label("Nombre: " + bocadillo.getNombre());
-                Label ingredientesLabel = new Label("Ingredientes: " + bocadillo.getIngredientes());
-                Label tipoLabel = new Label("Tipo: " + bocadillo.getTipo());
-                Label alergenosLabel = new Label(bocadilloService.obtenerAlergenosComoString(bocadillo));
-                Label precioLabel = new Label("Precio: " + String.format("%.2f€", bocadillo.getPrecio_venta_publico()));
-                vbox.getChildren().addAll(nombreLabel, ingredientesLabel, tipoLabel, alergenosLabel, precioLabel);
-                vbox.setAlignment(Pos.TOP_CENTER);
+                // Agregar todos los elementos al VBox
+                vbox.getChildren().addAll(nombreLabel, ingredientesFlow, tipoFlow, precioFlow, alergenosFlow);
 
+                // Verificar si existe un pedido para este bocadillo en el día de hoy para este alumno
                 boolean pedido_existente = false;
-                Pedido pedido_a_cancelar = null;
                 for (Pedido pedido : lista_pedidos) {
                     LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    if (pedido.getBocadillo().getId().equals(bocadillo.getId()) && pedido.getAlumno().getId().equals(alumno.getId()) && fechaPedido.equals(LocalDate.now())) {
+                    if (pedido.getBocadillo().getId().equals(bocadillo.getId())
+                            && pedido.getAlumno().getId().equals(alumno.getId())
+                            && fechaPedido.equals(LocalDate.now())) {
                         pedido_existente = true;
-                        pedido_a_cancelar = pedido;
                         break;
                     }
                 }
 
+                // Crear el botón y ajustarlo visualmente
                 Button botonPedido = new Button(pedido_existente ? "Cancelar pedido" : "Pedir");
-                VBox.setMargin(botonPedido, new Insets(10, 0, 0, 0));
+                botonPedido.setPrefWidth(150);
+                botonPedido.setPrefHeight(30);
+                botonPedido.setStyle("-fx-font-size: 14px; -fx-padding: 5 10 5 10; -fx-text-alignment: center;");
+                VBox.setMargin(botonPedido, new Insets(15, 0, 0, 0));
+
 
                 if (pedido_existente) {
                     botonPedido.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white;");
-                    // Aplicar un estilo sombreado al VBox cuando el bocadillo esté reservado
+                    // Cambiar el estilo del VBox para indicar que ya está reservado
                     vbox.setStyle("-fx-background-color: #f0f0f0; " +
                             "-fx-border-radius: 15px; " +
                             "-fx-background-radius: 15px; " +
@@ -197,10 +232,14 @@ public class AlumnoController {
                 }
 
                 vbox.getChildren().add(botonPedido);
+                vbox.setAlignment(Pos.TOP_CENTER);
+
                 bocadillosHBox.getChildren().add(vbox);
             }
         }
     }
+
+
 
 
 
@@ -222,17 +261,17 @@ public class AlumnoController {
         Alumno mi_alumno =  alumnoService.actualizarAlumnoPorId(alumno.getId());
 
         // Recargar los pedidos y los bocadillos después de hacer la reserva
-        cargarPedidos(mi_alumno);  // Actualizar la lista de pedidos
-        cargarBocadillos();     // Actualizar la lista de bocadillos
+        cargarPedidos(mi_alumno);
+        cargarBocadillos();
 
         // Volver a mostrar los bocadillos con los datos actualizados
-        mostrarBocadillos(lista_bocadillos, lista_pedidos, mi_alumno);  // Mostrar bocadillos actualizados
+        mostrarBocadillos(lista_bocadillos, lista_pedidos, mi_alumno);
     }
 
     public void cancelarPedido() {
         Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
         alerta.setTitle("Cancelar Reserva");
-        alerta.setHeaderText(null); // Sin encabezado para un diseño más limpio
+        alerta.setHeaderText(null);
         alerta.setContentText("¿Seguro que quieres cancelar la reserva?");
 
         // Personalizar los botones
@@ -263,7 +302,7 @@ public class AlumnoController {
                 LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 if (fechaPedido.equals(LocalDate.now())) {
-                    pedido_a_cancelar = pedido; // Guardamos el pedido encontrado
+                    pedido_a_cancelar = pedido;
                     break;
                 }
             }

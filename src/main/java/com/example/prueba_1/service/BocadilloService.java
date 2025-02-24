@@ -31,7 +31,7 @@ public class BocadilloService {
             return "No contiene alérgenos";
         }
 
-        StringBuilder alergenos_string = new StringBuilder("ALERGENOS: ");
+        StringBuilder alergenos_string = new StringBuilder();
 
         for (int i = 0; i < alergenos.size(); i++) {
             alergenos_string.append(alergenos.get(i).getNombre());

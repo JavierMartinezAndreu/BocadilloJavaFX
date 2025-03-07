@@ -7,6 +7,9 @@ module com.example.prueba_1 {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
     requires org.mariadb.jdbc;
+    requires layout;
+    requires kernel;
+    requires io;
 
 
     opens com.example.prueba_1 to javafx.fxml;

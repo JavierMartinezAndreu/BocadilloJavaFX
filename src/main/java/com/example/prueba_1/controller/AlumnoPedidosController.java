@@ -16,6 +16,8 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +53,9 @@ public class AlumnoPedidosController {
     @FXML
     private TableColumn<Pedido, String> columnaFecha;
 
+    @FXML
+    private Label lblTotalGastado;
+
     private Alumno alumno;
 
     // Método para inicializar el controlador
@@ -84,7 +89,6 @@ public class AlumnoPedidosController {
             // Obtener el Stage actual y reemplazar la escena (sin crear un nuevo Stage)
             Stage currentStage = (Stage) botonPedirBocadillo.getScene().getWindow();
             currentStage.setScene(new Scene(root));
-            currentStage.setFullScreen(true);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +98,7 @@ public class AlumnoPedidosController {
     public void cerrarSesion() {
         Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
         alerta.setTitle("Cerrar Sesión");
-        alerta.setHeaderText(null); // Sin encabezado para un diseño más limpio
+        alerta.setHeaderText(null);
         alerta.setContentText("¿Seguro que quieres cerrar sesión?\nPerderás el acceso a tu cuenta.");
 
         // Personalizar los botones
@@ -132,13 +136,12 @@ public class AlumnoPedidosController {
     }
 
     private void configurarTabla() {
-        // Evitar que se agregue una columna extra innecesaria
         tablaPedidos.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         // Configurar la columna Bocadillo (nombre)
         columnaBocadillo.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getBocadillo().getNombre()));
-        columnaBocadillo.setPrefWidth(200); // Fijar ancho para evitar expansión
+        columnaBocadillo.setPrefWidth(200);
 
         // Configurar la columna Tipo de Bocadillo
         columnaTipo.setCellValueFactory(cellData ->
@@ -208,8 +211,21 @@ public class AlumnoPedidosController {
     private void cargarPedidos() {
         List<Pedido> pedidos = alumno.getPedidos();
         if (pedidos != null && !pedidos.isEmpty()) {
-            tablaPedidos.getItems().setAll(pedidos); // Agregar solo los pedidos existentes
+            tablaPedidos.getItems().setAll(pedidos);
         }
+        actualizarTotalGastado(pedidos);
+    }
+
+    private void actualizarTotalGastado(List<Pedido> pedidos) {
+        double total = 0;
+        LocalDate hoy = LocalDate.now();
+        for (Pedido pedido : pedidos) {
+            LocalDate fechaPedido = pedido.getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (fechaPedido.getMonth() == hoy.getMonth() && fechaPedido.getYear() == hoy.getYear()) {
+                total += pedido.getPrecio_pedido();
+            }
+        }
+        lblTotalGastado.setText(String.format("%.2f €", total));
     }
 
 }

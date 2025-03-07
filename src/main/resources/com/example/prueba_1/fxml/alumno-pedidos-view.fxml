@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -22,12 +20,12 @@
                     </HBox.margin>
                 </Label>
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="botonPedirBocadillo" mnemonicParsing="false" text="Pedir" HBox.hgrow="NEVER">
+                <Button fx:id="botonPedirBocadillo" mnemonicParsing="false" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="PEDIR" HBox.hgrow="NEVER">
                     <HBox.margin>
                         <Insets right="20.0" top="15.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="botonCerrarSesion" mnemonicParsing="false" text="CERRAR SESIÓN" HBox.hgrow="NEVER">
+                <Button fx:id="botonCerrarSesion" mnemonicParsing="false" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="CERRAR SESIÓN" HBox.hgrow="NEVER">
                     <HBox.margin>
                         <Insets right="20.0" top="15.0" />
                     </HBox.margin>
@@ -40,23 +38,11 @@
         <VBox alignment="TOP_CENTER" prefHeight="617.0" prefWidth="1067.0" spacing="10">
             <children>
                 <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Historial de Pedidos" />
-                <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1164.0">
+                <HBox alignment="CENTER" prefHeight="61.0" prefWidth="1164.0" spacing="5.0">
                     <children>
-                        <ComboBox fx:id="comboBoxFiltro" minWidth="150.0" promptText="Selecciona el filtro" HBox.hgrow="NEVER">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Menor a Mayor" />
-                                    <String fx:value="Mayor a Menor" />
-                                    <String fx:value="Caliente"/>
-                                    <String fx:value="Frio"/>
-                                    <String fx:value="Fecha descendente"/>
-                                    <String fx:value="Fecha ascendente"/>
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-
+                        <ComboBox fx:id="comboBoxFiltro" minWidth="150.0" promptText="Selecciona el filtro" />
                         <!-- Botón para aplicar filtro -->
-                        <Button fx:id="botonFiltrar" text="Filtrar" HBox.hgrow="NEVER" />
+                        <Button fx:id="botonFiltrar" text="Filtrar" />
                     </children>
                 </HBox>
                 <TableView fx:id="tablaPedidos" maxWidth="650" prefWidth="650" style="-fx-background-color: #ffffff; -fx-border-color: #4CAF50; -fx-border-radius: 10px; -fx-padding: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);">
@@ -67,11 +53,14 @@
                         <TableColumn fx:id="columnaFecha" prefWidth="200.0" text="Fecha" />
                     </columns>
                 </TableView>
-
+                <HBox alignment="TOP_CENTER" spacing="10">
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="TOTAL GASTADO ESTE MES:" />
+                    <Label fx:id="lblTotalGastado" style="-fx-font-size: 16px;" />
+                </HBox>
             </children>
-         <BorderPane.margin>
-            <Insets top="30.0" />
-         </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets top="30.0" />
+            </BorderPane.margin>
         </VBox>
     </center>
 </BorderPane>

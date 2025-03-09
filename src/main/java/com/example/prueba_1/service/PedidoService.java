@@ -2,6 +2,7 @@ package com.example.prueba_1.service;
 
 import com.example.prueba_1.dao.PedidoDAO;
 import com.example.prueba_1.dao.UsuarioDAO;
+import com.example.prueba_1.model.Alumno;
 import com.example.prueba_1.model.Pedido;
 import com.example.prueba_1.model.Usuario;
 import com.example.prueba_1.util.HibernateUtil;
@@ -98,4 +99,7 @@ public class PedidoService {
     public void entregarPedido(Pedido pedido){
         pedidoDAO.update(pedido);
     }
+
+
+
 }

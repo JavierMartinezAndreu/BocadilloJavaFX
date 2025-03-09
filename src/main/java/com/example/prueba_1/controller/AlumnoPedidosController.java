@@ -1,8 +1,14 @@
 package com.example.prueba_1.controller;
 
+
 import com.example.prueba_1.model.Alumno;
 import com.example.prueba_1.model.Pedido;
 import com.example.prueba_1.service.PedidoService;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +20,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -226,6 +234,52 @@ public class AlumnoPedidosController {
             }
         }
         lblTotalGastado.setText(String.format("%.2f €", total));
+    }
+
+    @FXML
+    private void descargarPDF() {
+
+        String downloadsPath = System.getProperty("user.home") + File.separator + "Downloads";
+        String filePath = downloadsPath + File.separator + "Historial_Pedidos.pdf";
+
+        try {
+            PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Agregar título
+            document.add(new Paragraph("Historial de Pedidos Del Alumno "+ alumno.getNombre()).setFontSize(18));
+
+            // Obtener datos de la tabla
+            List<Pedido> pedidos = tablaPedidos.getItems();
+
+            if (pedidos.isEmpty()) {
+                document.add(new Paragraph("No hay pedidos registrados."));
+            } else {
+                Table table = new Table(4); // 4 columnas
+
+                // Encabezados
+                table.addCell(new Paragraph("Bocadillo"));
+                table.addCell(new Paragraph("Tipo"));
+                table.addCell(new Paragraph("Precio (€)"));
+                table.addCell(new Paragraph("Fecha"));
+
+                // Datos
+                for (Pedido pedido : pedidos) {
+                    table.addCell(pedido.getBocadillo().getNombre());
+                    table.addCell(pedido.getBocadillo().getTipo());
+                    table.addCell(String.valueOf(pedido.getPrecio_pedido()));
+                    table.addCell(pedido.getFecha().toString());
+                }
+
+                document.add(table);
+            }
+
+            document.close();
+            System.out.println("PDF generado correctamente: " + filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

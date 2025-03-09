@@ -11,6 +11,7 @@ import com.example.prueba_1.service.PedidoService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -62,6 +63,8 @@ public class GenerarPDF {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }catch (IOException ex){
+            ex.printStackTrace();
         }
     }
 }

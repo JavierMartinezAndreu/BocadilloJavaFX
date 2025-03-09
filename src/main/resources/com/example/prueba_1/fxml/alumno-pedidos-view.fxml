@@ -43,6 +43,7 @@
                         <ComboBox fx:id="comboBoxFiltro" minWidth="150.0" promptText="Selecciona el filtro" />
                         <!-- Botón para aplicar filtro -->
                         <Button fx:id="botonFiltrar" text="Filtrar" />
+                        <Button fx:id="botonDescargarPDF" text="Descargar PDF" onAction="#descargarPDF" />
                     </children>
                 </HBox>
                 <TableView fx:id="tablaPedidos" maxWidth="650" prefWidth="650" style="-fx-background-color: #ffffff; -fx-border-color: #4CAF50; -fx-border-radius: 10px; -fx-padding: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);">
